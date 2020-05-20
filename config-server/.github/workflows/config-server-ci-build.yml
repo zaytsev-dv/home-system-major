@@ -1,6 +1,8 @@
 name: build
 
 on:
+  push:
+    - dev
   pull_request:
       - master
       - dev
