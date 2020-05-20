@@ -1,0 +1,17 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: config-server
+  jmx:
+    default-domain: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/zaytsev-dv/config-repo.git
+          username: config_server_user
+          password: sR7xgq_gnxzwv12s7z7-
+          search-paths: test
+
