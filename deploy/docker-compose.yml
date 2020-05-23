@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  mongo:
+    hostname: mongodb-server
+    image: mongo
+    ports:
+      - "27017:27017"
+    restart: always
+    volumes:
+      - ./data/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - mongo
+      - home_system
+
+networks:
+  mongo:
+    driver: bridge
+  home_system:
+    driver: bridge
