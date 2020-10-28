@@ -1,0 +1,39 @@
+name: Create release
+
+on:
+  push:
+    branches:
+      - 'v.**'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get branch name
+        id: vars
+        run: echo ::set-output name=BRANCH_NAME::${GITHUB_REF#refs/*/}
+
+      - name: Check branch name
+        run: echo ${{ steps.vars.outputs.BRANCH_NAME }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.vars.outputs.BRANCH_NAME }}
+          release_name: Release ${{ steps.vars.outputs.BRANCH_NAME }}
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker build
+        run: docker build -t ${{ secrets.DOCKER_REPO_HOME_NOTIFICATIONS }}:${{ steps.vars.outputs.BRANCH_NAME }} .
+
+      - name: Docker push
+        run: docker push ${{ secrets.DOCKER_REPO_HOME_NOTIFICATIONS }}:${{ steps.vars.outputs.BRANCH_NAME }}
+
