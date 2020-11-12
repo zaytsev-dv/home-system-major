@@ -1,4 +1,4 @@
-package ru.home.system.major.core.adapters;
+package ru.home.system.major.core.adapters.telegram;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,18 +6,19 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.home.system.major.core.adapters.base.Adapter;
 import ru.home.system.major.core.adapters.base.NotificationAdapter;
 import ru.home.system.major.core.domain.TelegramUser;
 import ru.home.system.major.core.service.TelegramUserService;
 
-import java.util.Arrays;
 import java.util.Optional;
+
+import static ru.home.system.major.core.adapters.telegram.KeyboardCreator.getKeyboard;
+import static ru.home.system.major.core.adapters.telegram.TelegramAdapterCommand.*;
 
 @Component
 @Slf4j
@@ -96,20 +97,15 @@ public class TelegramAdapter extends TelegramLongPollingBot implements Notificat
 
 			switch (update.getMessage().getText())
 			{
-				case "/start":
+				case START:
 					text = "Привет " + "\"" + username + "\" " + "\uD83D\uDE01" + "\n" + "Для просмотра всех доступных команд используй: \"/help\"";
 					break;
-				case "/help":
+				case HELP:
 					text = "Не доступно. Пни разработчика и он запилит";
 					break;
-				case "/button":
+				case TEST_BUTTON:
 					text = "Это пример inline клавиатуры";
-					InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-					InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-					inlineKeyboardButton.setText("Тык");
-					inlineKeyboardButton.setCallbackData("Button \"Тык\" has been pressed");
-					inlineKeyboardMarkup.setKeyboard(Arrays.asList(Arrays.asList(inlineKeyboardButton)));
-					response.setReplyMarkup(inlineKeyboardMarkup);
+					response.setReplyMarkup(getKeyboard());
 					break;
 				default:
 					text = update.getMessage().getText();
