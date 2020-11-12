@@ -1,6 +1,26 @@
 spring:
   application:
-    name: home_system_major
+    name: home_notifications
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:6000/notifications
+    username: postgres
+    password: postgres
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.xml
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true # to avoid postgres lob creation error at start
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    show-sql: false
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -18,4 +38,4 @@ bot:
   username: name
 
 server:
-  port: 8080
+  port: 8090

@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  database:
+    build: ./database/
+    hostname: database_notifications
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: notifications
+    ports:
+      - "6000:5432"
+#    volumes:
+#      - ./database/create_database_for_docker.sql:/docker-entrypoint-initdb.d/1.sql
+
+  notifications:
+    restart: always
+    container_name: home_notifications
+    image: zaytsevdv/home-notifications:dev-latest
+    ports:
+      - "8081:8081"
+    networks:
+      - skynet
+    environment:
+      spring.profiles.active: 'dev-local'
+      spring.mail.username: 'user'
+      spring.mail.password: 'pass'
+      bot.token: 'token'
+      bot.username: 'my_home_system_bot'
+    links:
+      - database
+
+networks:
+  skynet:
+    driver: bridge
