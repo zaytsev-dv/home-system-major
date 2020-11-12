@@ -1,25 +1,21 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: Home Notifications API
+  title: Home System API
 
 servers:
-  - url: https://test/api/
-    description: Test server
-  - url: http://localhost:8080
+  - url: http://localhost:8090
     description: Local server
-  - url: https://prod/api
-    description: Production server
 
 tags:
-  - name: "Send"
-    description: "Sending endpoints"
+  - name: "Notifications"
+    description: "Notifications endpoints"
 
 paths:
   /:
     post:
       tags:
-        - "Send"
+        - "Notifications"
       description: "Прямая отправка письма"
       requestBody:
         required: true
