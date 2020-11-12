@@ -1,0 +1,56 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Home Notifications API
+
+servers:
+  - url: https://test/api/
+    description: Test server
+  - url: http://localhost:8080
+    description: Local server
+  - url: https://prod/api
+    description: Production server
+
+tags:
+  - name: "Send"
+    description: "Sending endpoints"
+
+paths:
+  /:
+    post:
+      tags:
+        - "Send"
+      description: "Прямая отправка письма"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotificationCreate"
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StringResponse"
+
+components:
+  schemas:
+    StringResponse:
+      type: "object"
+      properties:
+        result:
+          type: "string"
+
+    NotificationCreate:
+      type: "object"
+      properties:
+        notificationType:
+          type: "string"
+        subject:
+          type: "string"
+        message:
+          type: "string"
+        recipient:
+          type: "string"
