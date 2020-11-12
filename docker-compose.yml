@@ -3,11 +3,11 @@ version: '3.7'
 services:
   database:
     build: ./database/
-    hostname: database_notifications
+    hostname: database_home_system_major
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: notifications
+      POSTGRES_DB: home_system_major
     ports:
       - "6000:5432"
 #    volumes:
@@ -28,6 +28,8 @@ services:
       bot.token: 'token'
       bot.username: 'my_home_system_bot'
     links:
+      - database
+    depends_on:
       - database
 
 networks:

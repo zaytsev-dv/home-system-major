@@ -4,7 +4,7 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6000/notifications
+    url: jdbc:postgresql://localhost:6000/home_system_major
     username: postgres
     password: postgres
   liquibase:
