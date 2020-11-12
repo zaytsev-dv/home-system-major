@@ -12,7 +12,7 @@ tags:
     description: "Notifications endpoints"
 
 paths:
-  /:
+  /notifications:
     post:
       tags:
         - "Notifications"

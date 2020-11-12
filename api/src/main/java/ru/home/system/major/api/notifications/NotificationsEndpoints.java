@@ -9,7 +9,7 @@ import ru.home.system.major.core.service.NotificationService;
 import ru.home.system.major.core.dto.NotificationCreateDTO;
 
 @RestController
-@RequestMapping
+@RequestMapping("/notifications")
 @Slf4j
 public class NotificationsEndpoints
 {
