@@ -1,6 +1,6 @@
 spring:
   application:
-    name: home_notifications
+    name: home_system_major
 
   datasource:
     driver-class-name: org.postgresql.Driver
