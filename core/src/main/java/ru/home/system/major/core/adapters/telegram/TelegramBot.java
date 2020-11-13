@@ -24,17 +24,17 @@ public class TelegramBot extends TelegramLongPollingBot
 	private String username;
 
 	private final TelegramCommandHandler commandHandler;
-	private final TelegramKeyboardHandler answerHandler;
+	private final TelegramKeyboardHandler keyboardHandler;
 	private final TelegramMessageHandler messageHandler;
 
 	public TelegramBot(
 			TelegramCommandHandler commandHandler,
-			TelegramKeyboardHandler answerHandler,
+			TelegramKeyboardHandler keyboardHandler,
 			TelegramMessageHandler messageHandler
 	)
 	{
 		this.commandHandler = commandHandler;
-		this.answerHandler = answerHandler;
+		this.keyboardHandler = keyboardHandler;
 		this.messageHandler = messageHandler;
 	}
 
@@ -68,7 +68,7 @@ public class TelegramBot extends TelegramLongPollingBot
 		//обработчик клика по кнопке клавиатуры
 		else if (isAnswerOnKeyboardButton)
 		{
-			message = answerHandler.handle(update.getCallbackQuery().getData(), update.getCallbackQuery().getMessage().getChatId());
+			message = keyboardHandler.handle(update.getCallbackQuery().getData(), update.getCallbackQuery().getMessage().getChatId());
 		}
 
 		//ответ на вопрос заданный обычным сообщением (без клавиатуры и тд) ||
