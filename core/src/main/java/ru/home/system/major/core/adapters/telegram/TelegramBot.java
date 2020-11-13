@@ -25,14 +25,17 @@ public class TelegramBot extends TelegramLongPollingBot
 
 	private final TelegramCommandHandler commandHandler;
 	private final TelegramKeyboardHandler answerHandler;
+	private final TelegramMessageHandler messageHandler;
 
 	public TelegramBot(
 			TelegramCommandHandler commandHandler,
-			TelegramKeyboardHandler answerHandler
+			TelegramKeyboardHandler answerHandler,
+			TelegramMessageHandler messageHandler
 	)
 	{
 		this.commandHandler = commandHandler;
 		this.answerHandler = answerHandler;
+		this.messageHandler = messageHandler;
 	}
 
 	@Override
@@ -72,7 +75,8 @@ public class TelegramBot extends TelegramLongPollingBot
 		//пользователь отправил сообщение руками сам. Не через такие средства как клавиатура и тд
 		else
 		{
-			throw new UnsupportedOperationException("not impl");
+			//TODO: доделать
+			message = messageHandler.handle(null, update.getMessage().getChatId());
 		}
 
 		sendMsgToChat(message);
