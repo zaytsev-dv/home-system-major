@@ -25,8 +25,8 @@ services:
       spring.profiles.active: 'dev-local'
       spring.mail.username: 'user'
       spring.mail.password: 'pass'
-      bot.token: 'token'
-      bot.username: 'my_home_system_bot'
+      telegram-bot.token: 'token'
+      telegram-bot.username: 'my_home_system_bot'
     links:
       - database
     depends_on:
