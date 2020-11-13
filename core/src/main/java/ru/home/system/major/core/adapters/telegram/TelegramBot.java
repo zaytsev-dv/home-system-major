@@ -74,7 +74,7 @@ public class TelegramBot extends TelegramLongPollingBot
 		}
 		boolean isCommand = update.getMessage() != null && !CollectionUtils.isEmpty(update.getMessage().getEntities());
 		boolean isAnswerOnKeyboardButton = update.getCallbackQuery() != null;
-		boolean isAnswerOnQuestion = lastQuestion != null;
+		boolean isAnswerOnQuestion = lastQuestion != null && !lastQuestion.isAnswered();
 
 		SendMessage message = null;
 
@@ -94,7 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot
 		else if (isAnswerOnQuestion)
 		{
 			//TODO: доделать
-			message = messageHandler.handle(update.getMessage().getChatId(), lastQuestion);
+			message = messageHandler.questionNextAsk(update.getMessage().getChatId(), lastQuestion);
 		}
 
 		//пользователь отправил сообщение руками сам. Не через такие средства как клавиатура и тд
@@ -116,7 +116,7 @@ public class TelegramBot extends TelegramLongPollingBot
 				@Override
 				public void onResult(BotApiMethod<Message> method, Message response)
 				{
-					messageHandler.isNeedToSave(response);
+					messageHandler.isQuestion(response);
 					log.info(response.toString());
 				}
 

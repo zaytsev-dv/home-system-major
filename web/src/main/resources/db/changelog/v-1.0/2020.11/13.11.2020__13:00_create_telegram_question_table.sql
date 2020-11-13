@@ -5,5 +5,6 @@ CREATE TABLE telegram_question
     value       text,
     type        text,
     sub_type    text,
-    created_at  timestamp with time zone
+    created_at  timestamp with time zone,
+    is_answered bool
 );

@@ -20,7 +20,7 @@ public class TelegramMessageHandler
 		this.telegramQuestionService = telegramQuestionService;
 	}
 
-	SendMessage handle(Long chatId, TelegramQuestion lastQuestion)
+	SendMessage questionNextAsk(Long chatId, TelegramQuestion lastQuestion)
 	{
 		SendMessage response = new SendMessage();
 		response.setChatId(String.valueOf(chatId));
@@ -40,10 +40,13 @@ public class TelegramMessageHandler
 			}
 		}
 
+		lastQuestion.setAnswered(true);
+		telegramQuestionService.save(lastQuestion);
+
 		return response;
 	}
 
-	void isNeedToSave(Message message)
+	void isQuestion(Message message)
 	{
 		boolean needSave = false;
 		String type = null;
