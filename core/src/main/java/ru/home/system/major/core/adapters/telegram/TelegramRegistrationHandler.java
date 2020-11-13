@@ -12,54 +12,58 @@ import ru.home.system.major.core.service.TelegramQuestionService;
 import ru.home.system.major.core.service.TelegramUserService;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 @Slf4j
-public class TelegramMessageHandler
+public class TelegramRegistrationHandler implements TelegramAnswerHandler
 {
+	static List<String> registrationEMAIL = Collections.singletonList("Супер!!!Введи свой email");
+	static List<String> registrationPHONE = Collections.singletonList("Супер! А теперь Номер телефона");
+	static List<String> registration = Arrays.asList("Супер!!!Введи свой email", "Супер! А теперь Номер телефона");
+
 	private final TelegramQuestionService telegramQuestionService;
 	private final TelegramUserService telegramUserService;
 
-	public TelegramMessageHandler(TelegramQuestionService telegramQuestionService, TelegramUserService telegramUserService)
+	public TelegramRegistrationHandler(TelegramQuestionService telegramQuestionService, TelegramUserService telegramUserService)
 	{
 		this.telegramQuestionService = telegramQuestionService;
 		this.telegramUserService = telegramUserService;
 	}
 
-	SendMessage questionNextAsk(Update update, TelegramQuestion lastQuestion)
+	@Override
+	public SendMessage questionNextAsk(Update update, TelegramQuestion lastQuestion)
 	{
 		SendMessage response = new SendMessage();
 		response.setChatId(String.valueOf(update.getMessage().getChatId()));
 
-		if (lastQuestion.getType().equalsIgnoreCase("REGISTRATION"))
+		TelegramUser telegramUser = syncTelegramUser(update);
+		switch (lastQuestion.getSubType())
 		{
-			TelegramUser telegramUser = syncTelegramUser(update);
-
-			switch (lastQuestion.getSubType())
+			case "EMAIL":
 			{
-				case "EMAIL":
-				{
-					response.setText("Супер! А теперь Номер телефона");
-					telegramUser.setEmail(update.getMessage().getText());
-					break;
-				}
-
-				case "PHONE_NUMBER":
-				{
-					response.setText(
-							String.format(
-									"Добро пожаловать \"%s\":)",
-									telegramUser.getFirstname() + " " + telegramUser.getLastname()
-							)
-					);
-					telegramUser.setPhoneNumber(update.getMessage().getText());
-					break;
-				}
+				response.setText("Супер! А теперь Номер телефона");
+				telegramUser.setEmail(update.getMessage().getText());
+				break;
 			}
 
-			telegramUserService.save(telegramUser);
+			case "PHONE_NUMBER":
+			{
+				response.setText(
+						String.format(
+								"Добро пожаловать \"%s\":)",
+								telegramUser.getFirstname() + " " + telegramUser.getLastname()
+						)
+				);
+				telegramUser.setPhoneNumber(update.getMessage().getText());
+				break;
+			}
 		}
+
+		telegramUserService.save(telegramUser);
 
 
 		lastQuestion.setAnswered(true);
@@ -68,20 +72,21 @@ public class TelegramMessageHandler
 		return response;
 	}
 
-	void saveQuestion(Message message)
+	@Override
+	public void saveQuestion(Message message)
 	{
 		boolean needSave = false;
 		String type = null;
 		String subType = null;
 
-		if (MessageToSave.registrationEMAIL.contains(message.getText()))
+		if (registrationEMAIL.contains(message.getText()))
 		{
 			needSave = true;
 			type = "REGISTRATION";
 			subType = "EMAIL";
 		}
 
-		if (MessageToSave.registrationPHONE.contains(message.getText()))
+		if (registrationPHONE.contains(message.getText()))
 		{
 			needSave = true;
 			type = "REGISTRATION";
@@ -113,5 +118,11 @@ public class TelegramMessageHandler
 						.username(Optional.ofNullable(from.getUserName()).orElse(null))
 						.build()
 		);
+	}
+
+	@Override
+	public String getType()
+	{
+		return "REGISTRATION";
 	}
 }

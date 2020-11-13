@@ -27,19 +27,19 @@ public class TelegramBot extends TelegramLongPollingBot
 
 	private final TelegramCommandHandler commandHandler;
 	private final TelegramKeyboardHandler keyboardHandler;
-	private final TelegramMessageHandler messageHandler;
+	private final TelegramAnswerEngine answerHandler;
 	private final TelegramQuestionService telegramQuestionService;
 
 	public TelegramBot(
 			TelegramCommandHandler commandHandler,
 			TelegramKeyboardHandler keyboardHandler,
-			TelegramMessageHandler messageHandler,
+			TelegramAnswerEngine answerHandler,
 			TelegramQuestionService telegramQuestionService
 	)
 	{
 		this.commandHandler = commandHandler;
 		this.keyboardHandler = keyboardHandler;
-		this.messageHandler = messageHandler;
+		this.answerHandler = answerHandler;
 		this.telegramQuestionService = telegramQuestionService;
 	}
 
@@ -93,14 +93,13 @@ public class TelegramBot extends TelegramLongPollingBot
 		//ответ на вопрос заданный обычным сообщением (без клавиатуры и тд) ||
 		else if (isAnswerOnQuestion)
 		{
-			//TODO: доделать
-			message = messageHandler.questionNextAsk(update, lastQuestion);
+			message = answerHandler.questionNextAsk(update, lastQuestion);
 		}
 
 		//пользователь отправил сообщение руками сам. Не через такие средства как клавиатура и тд
 		else
 		{
-			throw new UnsupportedOperationException("not impl");
+			message = answerHandler.unknownMessage(update);
 		}
 
 		sendMsgToChat(message);
@@ -116,7 +115,7 @@ public class TelegramBot extends TelegramLongPollingBot
 				@Override
 				public void onResult(BotApiMethod<Message> method, Message response)
 				{
-					messageHandler.saveQuestion(response);
+					answerHandler.saveQuestion(response);
 					log.info(response.toString());
 				}
 

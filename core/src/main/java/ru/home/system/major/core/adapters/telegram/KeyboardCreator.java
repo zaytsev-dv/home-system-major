@@ -6,21 +6,11 @@ import ru.home.system.major.core.dto.TelegramButtonCallbackData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class KeyboardCreator
 {
-	static InlineKeyboardMarkup getKeyboard()
-	{
-		InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-		InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-		inlineKeyboardButton.setText("Тык");
-		inlineKeyboardButton.setCallbackData("Button \"Тык\" has been pressed");
-		inlineKeyboardMarkup.setKeyboard(Arrays.asList(Arrays.asList(inlineKeyboardButton)));
-
-		return inlineKeyboardMarkup;
-	}
-
 	static InlineKeyboardMarkup getKeyboard(List<TelegramButtonCallbackData> buttonNames)
 	{
 		InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -33,7 +23,7 @@ public class KeyboardCreator
 			buttons.add(inlineKeyboardButton);
 		});
 
-		inlineKeyboardMarkup.setKeyboard(Arrays.asList(buttons));
+		inlineKeyboardMarkup.setKeyboard(Collections.singletonList(buttons));
 
 		return inlineKeyboardMarkup;
 	}
