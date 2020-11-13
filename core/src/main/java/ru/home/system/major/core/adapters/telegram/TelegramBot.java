@@ -56,12 +56,13 @@ public class TelegramBot extends TelegramLongPollingBot
 	public void onUpdateReceived(Update update)
 	{
 		boolean isCommand = update.getMessage() != null;
-		boolean isAnswerOnCommand = update.getCallbackQuery() != null;
+		boolean isAnswerOnKeyboardButton = update.getCallbackQuery() != null;
 
 		SendMessage response = new SendMessage();
 		Long chatId = 0L;
 		String text = "";
 
+		//пришла команда
 		if (isCommand)
 		{
 			chatId = update.getMessage().getChatId();
@@ -80,7 +81,8 @@ public class TelegramBot extends TelegramLongPollingBot
 					text = update.getMessage().getText();
 			}
 		}
-		else if (isAnswerOnCommand)
+		//обработчик клика по кнопке клавиатуры
+		else if (isAnswerOnKeyboardButton)
 		{
 			chatId = update.getCallbackQuery().getMessage().getChatId();
 			switch (update.getCallbackQuery().getData())
@@ -97,6 +99,8 @@ public class TelegramBot extends TelegramLongPollingBot
 				}
 			}
 		}
+		//ответ на вопрос заданный обычным сообщением (без клавиатуры и тд) ||
+		//пользователь отправил сообщение руками сам. Не через такие средства как клавиатура и тд
 		else
 		{
 			throw new UnsupportedOperationException("not impl");
