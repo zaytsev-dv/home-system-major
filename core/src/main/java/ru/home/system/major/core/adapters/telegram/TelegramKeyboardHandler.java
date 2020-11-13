@@ -2,19 +2,20 @@ package ru.home.system.major.core.adapters.telegram;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
 public class TelegramKeyboardHandler
 {
-	SendMessage handle(String command, Long chatId)
+	SendMessage handle(Update update)
 	{
 		SendMessage response = new SendMessage();
-		response.setChatId(String.valueOf(chatId));
+		response.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
 
-		switch (command)
+		switch (update.getCallbackQuery().getData())
 		{
 			case "/register_confirm_yes":
-				response.setText("Супер!!!Введи свою фамилию и имя");
+				response.setText("Супер!!!Введи свой email");
 				break;
 			case "/register_confirm_no":
 			{

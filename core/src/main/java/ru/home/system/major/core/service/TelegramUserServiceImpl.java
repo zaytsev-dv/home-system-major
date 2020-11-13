@@ -25,15 +25,18 @@ public class TelegramUserServiceImpl extends BaseSqlServiceImpl<TelegramUser, Lo
 	}
 
 	@Override
-	public void checkWithSaveByExternalId(TelegramUser telegramUser)
+	public TelegramUser checkWithSaveByExternalId(TelegramUser telegramUser)
 	{
-		if (telegramUserRepository.getByExternalId(telegramUser.getExternalId()) == null)
+		TelegramUser existed = telegramUserRepository.getByExternalId(telegramUser.getExternalId());
+		if (existed == null)
 		{
-			telegramUserRepository.save(telegramUser);
+			return telegramUserRepository.save(telegramUser);
 		}
 		else
 		{
 			log.info("user with externalId: {} already saved", telegramUser.getExternalId());
 		}
+
+		return existed;
 	}
 }

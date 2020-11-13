@@ -4,13 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
-import ru.home.system.major.core.domain.TelegramUser;
 import ru.home.system.major.core.dto.TelegramButtonCallbackData;
-import ru.home.system.major.core.service.TelegramUserService;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 import static ru.home.system.major.core.adapters.telegram.KeyboardCreator.getKeyboard;
 import static ru.home.system.major.core.adapters.telegram.TelegramAdapterCommand.START;
@@ -19,18 +15,14 @@ import static ru.home.system.major.core.adapters.telegram.TelegramAdapterCommand
 @Slf4j
 public class TelegramCommandHandler
 {
-	private final TelegramUserService telegramUserService;
-
-	public TelegramCommandHandler(TelegramUserService telegramUserService)
+	SendMessage handle(Update update)
 	{
-		this.telegramUserService = telegramUserService;
-	}
-
-	SendMessage handle(String command, Long chatId) {
 		SendMessage response = new SendMessage();
-		response.setChatId(String.valueOf(chatId));
+		response.setChatId(String.valueOf(update.getMessage().getChatId()));
 
-		switch (command) {
+		// в данном случае это команда
+		switch (update.getMessage().getText())
+		{
 			case START:
 				response.setText("Привет " + "\uD83D\uDE01" + "\n" + "Для начала необходимо зарегистрироваться. Ты готов?");
 				response.setReplyMarkup(getKeyboard(Arrays.asList(
@@ -44,19 +36,5 @@ public class TelegramCommandHandler
 		}
 
 		return response;
-	}
-
-	private void syncTelegramUser(Update update)
-	{
-		log.info("sync telegram user");
-		User from = update.getMessage().getFrom();
-		telegramUserService.checkWithSaveByExternalId(
-				TelegramUser.builder()
-						.externalId(Long.valueOf(from.getId()))
-						.firstname(from.getFirstName())
-						.lastname(from.getLastName())
-						.username(Optional.ofNullable(from.getUserName()).orElse(null))
-						.build()
-		);
 	}
 }

@@ -30,4 +30,10 @@ public class TelegramUser
 
 	@Column(name = "username", columnDefinition = "text")
 	private String username;
+
+	@Column(name = "email", columnDefinition = "text")
+	private String email;
+
+	@Column(name = "phone_number", columnDefinition = "text")
+	private String phoneNumber;
 }

@@ -5,6 +5,6 @@ import java.util.List;
 
 public class MessageToSave
 {
-	static List<String> registrationFIO = Collections.singletonList("Супер!!!Введи свою фамилию и имя");
-	static List<String> registrationEMAIL = Collections.singletonList("Супер! А теперь EMAIL");
+	static List<String> registrationEMAIL = Collections.singletonList("Супер!!!Введи свой email");
+	static List<String> registrationPHONE = Collections.singletonList("Супер! А теперь Номер телефона");
 }

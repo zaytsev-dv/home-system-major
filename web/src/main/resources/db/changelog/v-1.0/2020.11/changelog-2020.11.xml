@@ -7,5 +7,6 @@
 
     <include file="db/changelog/v-1.0/2020.11/12.11.2020__00:10_create_telegram_user_table.sql"/>
     <include file="db/changelog/v-1.0/2020.11/13.11.2020__13:00_create_telegram_question_table.sql"/>
+    <include file="db/changelog/v-1.0/2020.11/13.11.2020__15:00_update_telegram_user_table.sql"/>
 
 </databaseChangeLog>

@@ -72,7 +72,7 @@ public class TelegramBot extends TelegramLongPollingBot
 		{
 			lastQuestion = telegramQuestionService.findTopByOrderByCreatedAtDesc(Long.valueOf(update.getMessage().getFrom().getId()));
 		}
-		boolean isCommand = update.getMessage() != null && !CollectionUtils.isEmpty(update.getMessage().getEntities());
+		boolean isCommand = update.getMessage() != null && !CollectionUtils.isEmpty(update.getMessage().getEntities()) && update.getMessage().getText().startsWith("/");
 		boolean isAnswerOnKeyboardButton = update.getCallbackQuery() != null;
 		boolean isAnswerOnQuestion = lastQuestion != null && !lastQuestion.isAnswered();
 
@@ -81,20 +81,20 @@ public class TelegramBot extends TelegramLongPollingBot
 		//пришла команда
 		if (isCommand)
 		{
-			message = commandHandler.handle(update.getMessage().getText(), update.getMessage().getChatId());
+			message = commandHandler.handle(update);
 		}
 
 		//обработчик клика по кнопке клавиатуры
 		else if (isAnswerOnKeyboardButton)
 		{
-			message = keyboardHandler.handle(update.getCallbackQuery().getData(), update.getCallbackQuery().getMessage().getChatId());
+			message = keyboardHandler.handle(update);
 		}
 
 		//ответ на вопрос заданный обычным сообщением (без клавиатуры и тд) ||
 		else if (isAnswerOnQuestion)
 		{
 			//TODO: доделать
-			message = messageHandler.questionNextAsk(update.getMessage().getChatId(), lastQuestion);
+			message = messageHandler.questionNextAsk(update, lastQuestion);
 		}
 
 		//пользователь отправил сообщение руками сам. Не через такие средства как клавиатура и тд
@@ -116,7 +116,7 @@ public class TelegramBot extends TelegramLongPollingBot
 				@Override
 				public void onResult(BotApiMethod<Message> method, Message response)
 				{
-					messageHandler.isQuestion(response);
+					messageHandler.saveQuestion(response);
 					log.info(response.toString());
 				}
 

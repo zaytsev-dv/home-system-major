@@ -4,41 +4,63 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 import ru.home.system.major.core.domain.TelegramQuestion;
+import ru.home.system.major.core.domain.TelegramUser;
 import ru.home.system.major.core.service.TelegramQuestionService;
+import ru.home.system.major.core.service.TelegramUserService;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Component
 @Slf4j
 public class TelegramMessageHandler
 {
 	private final TelegramQuestionService telegramQuestionService;
+	private final TelegramUserService telegramUserService;
 
-	public TelegramMessageHandler(TelegramQuestionService telegramQuestionService)
+	public TelegramMessageHandler(TelegramQuestionService telegramQuestionService, TelegramUserService telegramUserService)
 	{
 		this.telegramQuestionService = telegramQuestionService;
+		this.telegramUserService = telegramUserService;
 	}
 
-	SendMessage questionNextAsk(Long chatId, TelegramQuestion lastQuestion)
+	SendMessage questionNextAsk(Update update, TelegramQuestion lastQuestion)
 	{
 		SendMessage response = new SendMessage();
-		response.setChatId(String.valueOf(chatId));
+		response.setChatId(String.valueOf(update.getMessage().getChatId()));
 
-		switch (lastQuestion.getSubType())
+		if (lastQuestion.getType().equalsIgnoreCase("REGISTRATION"))
 		{
-			case "FIO":
+			TelegramUser telegramUser = syncTelegramUser(update);
+
+			switch (lastQuestion.getSubType())
 			{
-				response.setText("Супер! А теперь EMAIL");
-				break;
+				case "EMAIL":
+				{
+					response.setText("Супер! А теперь Номер телефона");
+					telegramUser.setEmail(update.getMessage().getText());
+					break;
+				}
+
+				case "PHONE_NUMBER":
+				{
+					response.setText(
+							String.format(
+									"Добро пожаловать \"%s\":)",
+									telegramUser.getFirstname() + " " + telegramUser.getLastname()
+							)
+					);
+					telegramUser.setPhoneNumber(update.getMessage().getText());
+					break;
+				}
 			}
 
-			case "EMAIL":
-			{
-				response.setText("На этом все:)");
-				break;
-			}
+			telegramUserService.save(telegramUser);
 		}
+
 
 		lastQuestion.setAnswered(true);
 		telegramQuestionService.save(lastQuestion);
@@ -46,24 +68,24 @@ public class TelegramMessageHandler
 		return response;
 	}
 
-	void isQuestion(Message message)
+	void saveQuestion(Message message)
 	{
 		boolean needSave = false;
 		String type = null;
 		String subType = null;
-
-		if (MessageToSave.registrationFIO.contains(message.getText()))
-		{
-			needSave = true;
-			type = "REGISTRATION";
-			subType = "FIO";
-		}
 
 		if (MessageToSave.registrationEMAIL.contains(message.getText()))
 		{
 			needSave = true;
 			type = "REGISTRATION";
 			subType = "EMAIL";
+		}
+
+		if (MessageToSave.registrationPHONE.contains(message.getText()))
+		{
+			needSave = true;
+			type = "REGISTRATION";
+			subType = "PHONE_NUMBER";
 		}
 
 		if (needSave)
@@ -77,5 +99,19 @@ public class TelegramMessageHandler
 					.build();
 			telegramQuestionService.save(question);
 		}
+	}
+
+	private TelegramUser syncTelegramUser(Update update)
+	{
+		log.info("sync telegram user");
+		User from = update.getMessage().getFrom();
+		return telegramUserService.checkWithSaveByExternalId(
+				TelegramUser.builder()
+						.externalId(Long.valueOf(from.getId()))
+						.firstname(from.getFirstName())
+						.lastname(from.getLastName())
+						.username(Optional.ofNullable(from.getUserName()).orElse(null))
+						.build()
+		);
 	}
 }

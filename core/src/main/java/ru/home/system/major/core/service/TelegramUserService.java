@@ -6,5 +6,5 @@ import ru.home.system.major.core.service.base.BaseService;
 
 public interface TelegramUserService extends BaseService<TelegramUser, Long>
 {
-	void checkWithSaveByExternalId(TelegramUser telegramUser);
+	TelegramUser checkWithSaveByExternalId(TelegramUser telegramUser);
 }

@@ -35,9 +35,6 @@ public class TelegramQuestion
 	@Column(name = "created_at", columnDefinition = "timestamp with timezone")
 	private LocalDateTime createdAt;
 
-//	@Column(name = "is_last", columnDefinition = "bool")
-//	private boolean isLast;
-
 	@Column(name = "is_answered", columnDefinition = "bool")
 	private boolean isAnswered;
 }
