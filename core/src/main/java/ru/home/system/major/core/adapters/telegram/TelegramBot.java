@@ -3,24 +3,15 @@ package ru.home.system.major.core.adapters.telegram;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.updateshandlers.SentCallback;
-import ru.home.system.major.core.domain.TelegramUser;
-import ru.home.system.major.core.dto.TelegramButtonCallbackData;
-import ru.home.system.major.core.service.TelegramUserService;
-
-import java.util.Arrays;
-import java.util.Optional;
-
-import static ru.home.system.major.core.adapters.telegram.KeyboardCreator.getKeyboard;
-import static ru.home.system.major.core.adapters.telegram.TelegramAdapterCommand.START;
 
 @Component
 @Slf4j
@@ -32,11 +23,16 @@ public class TelegramBot extends TelegramLongPollingBot
 	@Value("${telegram-bot.username}")
 	private String username;
 
-	private final TelegramUserService telegramUserService;
+	private final TelegramCommandHandler commandHandler;
+	private final TelegramKeyboardHandler answerHandler;
 
-	public TelegramBot(TelegramUserService telegramUserService)
+	public TelegramBot(
+			TelegramCommandHandler commandHandler,
+			TelegramKeyboardHandler answerHandler
+	)
 	{
-		this.telegramUserService = telegramUserService;
+		this.commandHandler = commandHandler;
+		this.answerHandler = answerHandler;
 	}
 
 	@Override
@@ -55,50 +51,23 @@ public class TelegramBot extends TelegramLongPollingBot
 	@Override
 	public void onUpdateReceived(Update update)
 	{
-		boolean isCommand = update.getMessage() != null;
+		boolean isCommand = update.getMessage() != null && !CollectionUtils.isEmpty(update.getMessage().getEntities());
 		boolean isAnswerOnKeyboardButton = update.getCallbackQuery() != null;
 
-		SendMessage response = new SendMessage();
-		Long chatId = 0L;
-		String text = "";
+		SendMessage message = null;
 
 		//пришла команда
 		if (isCommand)
 		{
-			chatId = update.getMessage().getChatId();
-
-			switch (update.getMessage().getText())
-			{
-				case START:
-					text = "Привет " + "\uD83D\uDE01" + "\n" + "Для начала необходимо зарегистрироваться. Ты готов?";
-					response.setReplyMarkup(getKeyboard(Arrays.asList(
-							new TelegramButtonCallbackData("Да", "/register_confirm_yes"),
-							new TelegramButtonCallbackData("Нет", "/register_confirm_no")
-					)));
-					break;
-
-				default:
-					text = update.getMessage().getText();
-			}
+			message = commandHandler.handle(update.getMessage().getText(), update.getMessage().getChatId());
 		}
+
 		//обработчик клика по кнопке клавиатуры
 		else if (isAnswerOnKeyboardButton)
 		{
-			chatId = update.getCallbackQuery().getMessage().getChatId();
-			switch (update.getCallbackQuery().getData())
-			{
-				case "/register_confirm_yes":
-				{
-					text = "Супер!!!Введи свою фамилию и имя";
-					break;
-				}
-				case "/register_confirm_no":
-				{
-					text = "Что ж очень жаль. Тогда до новых встреч и удачи тебе!";
-					break;
-				}
-			}
+			message = answerHandler.handle(update.getCallbackQuery().getData(), update.getCallbackQuery().getMessage().getChatId());
 		}
+
 		//ответ на вопрос заданный обычным сообщением (без клавиатуры и тд) ||
 		//пользователь отправил сообщение руками сам. Не через такие средства как клавиатура и тд
 		else
@@ -106,10 +75,7 @@ public class TelegramBot extends TelegramLongPollingBot
 			throw new UnsupportedOperationException("not impl");
 		}
 
-		response.setChatId(String.valueOf(chatId));
-		response.setText(text);
-
-		sendMsgToChat(response);
+		sendMsgToChat(message);
 	}
 
 	void sendMsgToChat(SendMessage response)
@@ -122,7 +88,7 @@ public class TelegramBot extends TelegramLongPollingBot
 				@Override
 				public void onResult(BotApiMethod<Message> method, Message response)
 				{
-					System.out.println("twts");
+					log.info(response.toString());
 				}
 
 				@Override
@@ -144,19 +110,5 @@ public class TelegramBot extends TelegramLongPollingBot
 		{
 			log.error("Failed to send message \"{}\" to {} due to error: {}", response.getText(), response.getChatId(), e.getMessage());
 		}
-	}
-
-	private void syncTelegramUser(Update update)
-	{
-		log.info("sync telegram user");
-		User from = update.getMessage().getFrom();
-		telegramUserService.checkWithSaveByExternalId(
-				TelegramUser.builder()
-						.externalId(Long.valueOf(from.getId()))
-						.firstname(from.getFirstName())
-						.lastname(from.getLastName())
-						.username(Optional.ofNullable(from.getUserName()).orElse(null))
-						.build()
-		);
 	}
 }
