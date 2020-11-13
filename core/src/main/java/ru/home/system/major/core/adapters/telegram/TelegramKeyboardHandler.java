@@ -3,17 +3,21 @@ package ru.home.system.major.core.adapters.telegram;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.home.system.major.core.domain.TelegramQuestion;
 import ru.home.system.major.core.domain.TelegramUser;
+import ru.home.system.major.core.service.TelegramQuestionService;
 import ru.home.system.major.core.service.TelegramUserService;
 
 @Component
 public class TelegramKeyboardHandler
 {
 	private final TelegramUserService telegramUserService;
+	private final TelegramQuestionService telegramQuestionService;
 
-	public TelegramKeyboardHandler(TelegramUserService telegramUserService)
+	public TelegramKeyboardHandler(TelegramUserService telegramUserService, TelegramQuestionService telegramQuestionService)
 	{
 		this.telegramUserService = telegramUserService;
+		this.telegramQuestionService = telegramQuestionService;
 	}
 
 	SendMessage handle(Update update)
@@ -35,6 +39,7 @@ public class TelegramKeyboardHandler
 			{
 				telegramUser.setConfirm(true);
 				telegramUserService.save(telegramUser);
+				telegramQuestionService.deleteAll(telegramQuestionService.getAllByExternalIdAndType(telegramUser.getExternalId(), "REGISTRATION"));
 				response.setText(
 						String.format(
 								"Добро пожаловать \"%s\":)",

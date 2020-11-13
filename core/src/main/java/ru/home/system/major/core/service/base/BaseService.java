@@ -13,6 +13,7 @@ public interface BaseService<T, ID extends Serializable>
 	T getById(ID id);
 
 	void delete(T entity);
+	void deleteAll(List<T> entity);
 
 	List<T> findAll();
 

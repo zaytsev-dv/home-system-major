@@ -26,6 +26,11 @@ public abstract class BaseSqlServiceImpl<T, ID extends Serializable> implements 
 		this.getRepository().delete(entity);
 	}
 
+	public void deleteAll(List<T> entity)
+	{
+		this.getRepository().deleteAll(entity);
+	}
+
 	public List<T> findAll()
 	{
 		return (List<T>) getRepository().findAll();

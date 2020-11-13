@@ -7,6 +7,8 @@ import ru.home.system.major.core.repository.TelegramQuestionRepository;
 import ru.home.system.major.core.repository.base.BaseSqlRepository;
 import ru.home.system.major.core.service.base.BaseSqlServiceImpl;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class TelegramQuestionServiceImpl extends BaseSqlServiceImpl<TelegramQuestion, Long> implements TelegramQuestionService
@@ -29,5 +31,11 @@ public class TelegramQuestionServiceImpl extends BaseSqlServiceImpl<TelegramQues
 	public TelegramQuestion findTopByOrderByCreatedAtDesc(Long userId)
 	{
 		return telegramQuestionRepository.findTopByExternalIdOrderByCreatedAtDesc(userId);
+	}
+
+	@Override
+	public List<TelegramQuestion> getAllByExternalIdAndType(Long externalId, String type)
+	{
+		return telegramQuestionRepository.getAllByExternalIdAndType(externalId, type);
 	}
 }
