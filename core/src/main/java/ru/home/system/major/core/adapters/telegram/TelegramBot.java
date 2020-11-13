@@ -116,7 +116,6 @@ public class TelegramBot extends TelegramLongPollingBot
 				public void onResult(BotApiMethod<Message> method, Message response)
 				{
 					answerHandler.saveQuestion(response);
-					log.info(response.toString());
 				}
 
 				@Override

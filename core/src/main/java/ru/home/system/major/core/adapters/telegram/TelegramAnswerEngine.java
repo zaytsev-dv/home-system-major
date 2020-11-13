@@ -2,6 +2,7 @@ package ru.home.system.major.core.adapters.telegram;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -31,8 +32,11 @@ public class TelegramAnswerEngine extends BaseTelegramAnswerHandler
 		{
 			handlerType = "REGISTRATION";
 		}
-		TelegramAnswerHandler handler = getMessageHandler(handlerType);
-		handler.saveQuestion(message);
+
+		if (StringUtils.hasText(handlerType)) {
+			TelegramAnswerHandler handler = getMessageHandler(handlerType);
+			handler.saveQuestion(message);
+		}
 	}
 
 	SendMessage unknownMessage(Update update) {

@@ -1,0 +1,1 @@
+alter table telegram_users add column is_confirm bool;

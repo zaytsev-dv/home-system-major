@@ -39,4 +39,10 @@ public class TelegramUserServiceImpl extends BaseSqlServiceImpl<TelegramUser, Lo
 
 		return existed;
 	}
+
+	@Override
+	public TelegramUser getByExternalId(Long externalId)
+	{
+		return telegramUserRepository.getByExternalId(externalId);
+	}
 }

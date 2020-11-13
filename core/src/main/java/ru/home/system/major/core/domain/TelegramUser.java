@@ -36,4 +36,7 @@ public class TelegramUser
 
 	@Column(name = "phone_number", columnDefinition = "text")
 	private String phoneNumber;
+
+	@Column(name = "is_confirm", columnDefinition = "bool")
+	private boolean isConfirm;
 }

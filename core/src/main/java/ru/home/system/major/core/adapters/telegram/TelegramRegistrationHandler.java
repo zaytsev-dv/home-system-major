@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.home.system.major.core.domain.TelegramQuestion;
 import ru.home.system.major.core.domain.TelegramUser;
+import ru.home.system.major.core.dto.TelegramButtonCallbackData;
 import ru.home.system.major.core.service.TelegramQuestionService;
 import ru.home.system.major.core.service.TelegramUserService;
 
@@ -16,6 +17,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static ru.home.system.major.core.adapters.telegram.KeyboardCreator.getKeyboard;
 
 @Component
 @Slf4j
@@ -52,13 +55,19 @@ public class TelegramRegistrationHandler implements TelegramAnswerHandler
 
 			case "PHONE_NUMBER":
 			{
+				telegramUser.setPhoneNumber(update.getMessage().getText());
 				response.setText(
 						String.format(
-								"Добро пожаловать \"%s\":)",
-								telegramUser.getFirstname() + " " + telegramUser.getLastname()
+								"Все ли верно?\n Email: \"%s\"\n Номер телефона: \"%s\"",
+								telegramUser.getEmail(), telegramUser.getPhoneNumber()
 						)
 				);
-				telegramUser.setPhoneNumber(update.getMessage().getText());
+
+				response.setReplyMarkup(getKeyboard(Arrays.asList(
+						new TelegramButtonCallbackData("Да", "/register_confirm_final_yes"),
+						new TelegramButtonCallbackData("Нет (заполнить заново)", "/register_confirm_final_no")
+				)));
+
 				break;
 			}
 		}
