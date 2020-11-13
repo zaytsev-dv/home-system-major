@@ -7,6 +7,9 @@ import ru.home.system.major.core.repository.base.BaseSqlRepository;
 
 public interface TelegramQuestionRepository extends BaseSqlRepository<TelegramQuestion, Long>
 {
-	@Query("select t from TelegramQuestion t order by t.id desc")
-	TelegramQuestion getLastRecord();
+	@Query("select t from TelegramQuestion t where t.externalId=?1 and t.createdAt = max(t.createdAt) order by t.id desc")
+	TelegramQuestion getLastRecordByUserAndLastDate(Long userId);
+
+	TelegramQuestion findTopByExternalIdOrderByCreatedAtDesc(Long userId);
+
 }

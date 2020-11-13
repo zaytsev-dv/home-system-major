@@ -6,5 +6,5 @@ import ru.home.system.major.core.service.base.BaseService;
 
 public interface TelegramQuestionService extends BaseService<TelegramQuestion, Long>
 {
-	TelegramQuestion getLastRecord();
+	TelegramQuestion findTopByOrderByCreatedAtDesc(Long userId);
 }

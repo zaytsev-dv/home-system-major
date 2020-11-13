@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "telegram_question")
@@ -24,4 +25,13 @@ public class TelegramQuestion
 
 	@Column(name = "value", columnDefinition = "text")
 	private String value;
+
+	@Column(name = "type", columnDefinition = "text")
+	private String type;
+
+	@Column(name = "sub_type", columnDefinition = "text")
+	private String subType;
+
+	@Column(name = "created_at", columnDefinition = "timestamp with timezone")
+	private LocalDateTime createdAt;
 }

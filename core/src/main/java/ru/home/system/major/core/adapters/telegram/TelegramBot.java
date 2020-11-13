@@ -63,7 +63,15 @@ public class TelegramBot extends TelegramLongPollingBot
 	@Override
 	public void onUpdateReceived(Update update)
 	{
-		TelegramQuestion lastQuestion = telegramQuestionService.getLastRecord();
+		TelegramQuestion lastQuestion = null;
+		if (update.getMessage() == null)
+		{
+			lastQuestion = telegramQuestionService.findTopByOrderByCreatedAtDesc(Long.valueOf(update.getCallbackQuery().getFrom().getId()));
+		}
+		else
+		{
+			lastQuestion = telegramQuestionService.findTopByOrderByCreatedAtDesc(Long.valueOf(update.getMessage().getFrom().getId()));
+		}
 		boolean isCommand = update.getMessage() != null && !CollectionUtils.isEmpty(update.getMessage().getEntities());
 		boolean isAnswerOnKeyboardButton = update.getCallbackQuery() != null;
 		boolean isAnswerOnQuestion = lastQuestion != null;
@@ -86,7 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot
 		else if (isAnswerOnQuestion)
 		{
 			//TODO: доделать
-			message = messageHandler.handle(update.getMessage().getText(), update.getMessage().getChatId(), lastQuestion);
+			message = messageHandler.handle(update.getMessage().getChatId(), lastQuestion);
 		}
 
 		//пользователь отправил сообщение руками сам. Не через такие средства как клавиатура и тд
@@ -108,16 +116,7 @@ public class TelegramBot extends TelegramLongPollingBot
 				@Override
 				public void onResult(BotApiMethod<Message> method, Message response)
 				{
-					boolean needToSave = MessageToSave.msgToSave.contains(response.getText());
-					if (needToSave)
-					{
-						TelegramQuestion question = TelegramQuestion.builder()
-								.externalId(Long.valueOf(response.getFrom().getId()))
-								.value(response.getText())
-								.build();
-						telegramQuestionService.save(question);
-					}
-
+					messageHandler.isNeedToSave(response);
 					log.info(response.toString());
 				}
 
