@@ -12,7 +12,7 @@ jobs:
     name: Create and push image to docker hub
     runs-on: ubuntu-latest
     env:
-      DOCKER_REPO_HOME_NOTIFICATIONS: zaytsevdv/home-system-major
+      DOCKER_REPO_HOME_SYSTEM_MAJOR: zaytsevdv/home-system-major
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK 8
