@@ -50,6 +50,11 @@ public class TelegramBot extends TelegramLongPollingBot
 		return token;
 	}
 
+	/**
+	 *
+	 * @param update telegram library object. See -> org.telegram.telegrambots.meta.api.objects
+	 * @implNote Income telegram message handler
+	 */
 	//TODO: run async
 	@Override
 	public void onUpdateReceived(Update update)
