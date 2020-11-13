@@ -1,0 +1,27 @@
+package ru.home.system.major.core.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "telegram_question")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class TelegramQuestion
+{
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "external_id", columnDefinition = "bigint")
+	private Long externalId;
+
+	@Column(name = "value", columnDefinition = "text")
+	private String value;
+}
