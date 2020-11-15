@@ -13,6 +13,18 @@ services:
 #    volumes:
 #      - ./database/create_database_for_docker.sql:/docker-entrypoint-initdb.d/1.sql
 
+  nginx:
+    container_name: nginx
+    image: nginx
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - skynet
+
   home_system_major:
     restart: always
     container_name: home_system_major
@@ -31,6 +43,7 @@ services:
       - database
     depends_on:
       - database
+      - nginx
 
 networks:
   skynet:
