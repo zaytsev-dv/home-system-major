@@ -10,6 +10,8 @@ servers:
 tags:
   - name: "Notifications"
     description: "Notifications endpoints"
+  - name: "Notes"
+    description: "Notes endpoints"
 
 paths:
   /notifications:
@@ -23,6 +25,24 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/NotificationCreate"
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StringResponse"
+  /notes:
+    post:
+      tags:
+        - "Notes"
+      description: "Создание записки"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotesCreate"
       responses:
         '200':
           description: "successful operation"
@@ -50,3 +70,13 @@ components:
           type: "string"
         recipient:
           type: "string"
+
+    NotesCreate:
+      type: "object"
+      properties:
+        value:
+          type: "string"
+        description:
+          type: "string"
+        telegramUserId:
+          type: "number"
