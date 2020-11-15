@@ -26,20 +26,20 @@ public class TelegramBot extends TelegramLongPollingBot
 	private String username;
 
 	private final TelegramCommandHandler commandHandler;
-	private final TelegramKeyboardHandler keyboardHandler;
-	private final TelegramAnswerEngine answerHandler;
+	private final TelegramKeyboardEngine keyboardEngine;
+	private final TelegramAnswerEngine answerEngine;
 	private final TelegramQuestionService telegramQuestionService;
 
 	public TelegramBot(
 			TelegramCommandHandler commandHandler,
-			TelegramKeyboardHandler keyboardHandler,
-			TelegramAnswerEngine answerHandler,
+			TelegramKeyboardEngine keyboardEngine,
+			TelegramAnswerEngine answerEngine,
 			TelegramQuestionService telegramQuestionService
 	)
 	{
 		this.commandHandler = commandHandler;
-		this.keyboardHandler = keyboardHandler;
-		this.answerHandler = answerHandler;
+		this.keyboardEngine = keyboardEngine;
+		this.answerEngine = answerEngine;
 		this.telegramQuestionService = telegramQuestionService;
 	}
 
@@ -87,19 +87,19 @@ public class TelegramBot extends TelegramLongPollingBot
 		//обработчик клика по кнопке клавиатуры
 		else if (isAnswerOnKeyboardButton)
 		{
-			message = keyboardHandler.handle(update);
+			message = keyboardEngine.handle(update);
 		}
 
 		//ответ на вопрос заданный обычным сообщением (без клавиатуры и тд) ||
 		else if (isAnswerOnQuestion)
 		{
-			message = answerHandler.questionNextAsk(update, lastQuestion);
+			message = answerEngine.questionNextAsk(update, lastQuestion);
 		}
 
 		//пользователь отправил сообщение руками сам. Не через такие средства как клавиатура и тд
 		else
 		{
-			message = answerHandler.unknownMessage(update);
+			message = answerEngine.unknownMessage(update);
 		}
 
 		sendMsgToChat(message);
@@ -115,7 +115,7 @@ public class TelegramBot extends TelegramLongPollingBot
 				@Override
 				public void onResult(BotApiMethod<Message> method, Message response)
 				{
-					answerHandler.saveQuestion(response);
+					answerEngine.saveQuestion(response);
 				}
 
 				@Override
