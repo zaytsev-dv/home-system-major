@@ -7,5 +7,5 @@ import ru.home.system.major.core.repository.base.BaseSqlRepository;
 public interface TelegramUserRepository extends BaseSqlRepository<TelegramUser, Long>
 {
 	TelegramUser getByExternalId(Long externalId);
-	TelegramUser getByExternalIdOrId(Long id);
+	TelegramUser getByExternalIdOrId(Long externalId, Long id);
 }
