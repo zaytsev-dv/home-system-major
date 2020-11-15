@@ -11,6 +11,7 @@ import ru.home.system.major.core.repository.base.BaseSqlRepository;
 import ru.home.system.major.core.service.TelegramUserService;
 import ru.home.system.major.core.service.base.BaseSqlServiceImpl;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,5 +44,17 @@ public class NotesServiceImpl extends BaseSqlServiceImpl<Notes, Long> implements
 				.description(body.getDescription())
 				.telegramUser(telegramUser)
 				.build());
+	}
+
+	@Override
+	public List<Notes> getAllByTelegramUser(TelegramUser telegramUser)
+	{
+		return notesRepository.getAllByTelegramUser(telegramUser);
+	}
+
+	@Override
+	public List<Notes> getAllByTelegramUser(Long externalId)
+	{
+		return notesRepository.getAllByTelegramUser(telegramUserService.getByExternalId(externalId));
 	}
 }
