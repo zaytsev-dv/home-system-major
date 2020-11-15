@@ -2,6 +2,7 @@ package ru.home.system.major.core.adapters.telegram;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.system.major.core.dto.TelegramButtonCallbackData;
@@ -44,10 +45,11 @@ public class TelegramCommandHandler
 			break;
 			case ALL_NOTES:
 			{
+				String notes = notesService.getAllByTelegramUser(Long.valueOf(update.getMessage().getFrom().getId())).stream().map(note -> {
+					return note.getValue() + "-" + note.getDescription();
+				}).collect(Collectors.joining("\n"));
 				response.setText(
-						notesService.getAllByTelegramUser(Long.valueOf(update.getMessage().getFrom().getId())).stream().map(note -> {
-							return note.getValue() + "-" + note.getDescription();
-						}).collect(Collectors.joining("\n"))
+						!StringUtils.hasText(notes) ? "Нет сохраненных записок!" : notes
 				);
 				break;
 			}
