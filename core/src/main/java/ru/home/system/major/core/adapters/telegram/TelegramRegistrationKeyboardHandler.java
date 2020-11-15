@@ -3,7 +3,10 @@ package ru.home.system.major.core.adapters.telegram;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.home.system.major.core.domain.TelegramCommandKeys;
 import ru.home.system.major.core.domain.TelegramUser;
+import ru.home.system.major.core.service.TelegramCommandKeysService;
+import ru.home.system.major.core.service.TelegramCommandMapKey;
 import ru.home.system.major.core.service.TelegramQuestionService;
 import ru.home.system.major.core.service.TelegramUserService;
 
@@ -21,11 +24,17 @@ public class TelegramRegistrationKeyboardHandler implements TelegramKeyboardHand
 	);
 
 	private final TelegramUserService telegramUserService;
+	private final TelegramCommandKeysService telegramCommandKeysService;
 	private final TelegramQuestionService telegramQuestionService;
 
-	public TelegramRegistrationKeyboardHandler(TelegramUserService telegramUserService, TelegramQuestionService telegramQuestionService)
+	public TelegramRegistrationKeyboardHandler(
+			TelegramUserService telegramUserService,
+			TelegramCommandKeysService telegramCommandKeysService,
+			TelegramQuestionService telegramQuestionService
+	)
 	{
 		this.telegramUserService = telegramUserService;
+		this.telegramCommandKeysService = telegramCommandKeysService;
 		this.telegramQuestionService = telegramQuestionService;
 	}
 
@@ -35,39 +44,30 @@ public class TelegramRegistrationKeyboardHandler implements TelegramKeyboardHand
 		SendMessage response = new SendMessage();
 		response.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
 		TelegramUser telegramUser = telegramUserService.getByExternalId(Long.valueOf(update.getCallbackQuery().getFrom().getId()));
-		switch (update.getCallbackQuery().getData())
+
+		TelegramCommandKeys registrationCommand = telegramCommandKeysService.findAllCacheable()
+				.get(new TelegramCommandMapKey(update.getCallbackQuery().getData(), "REGISTRATION_KEYBOARD"));
+
+		if (registrationCommand.getValue().equalsIgnoreCase("/register_confirm_final_yes"))
 		{
-			case "/register_confirm_yes":
-				response.setText("Супер!!!Введи свой email");
-				break;
-			case "/register_confirm_no":
-			{
-				response.setText("Что ж очень жаль. Тогда до новых встреч и удачи тебе!");
-				break;
-			}
-			case "/register_confirm_final_yes":
-			{
-				telegramUser.setConfirm(true);
-				telegramUserService.save(telegramUser);
-				telegramQuestionService.deleteAll(telegramQuestionService.getAllByExternalIdAndType(telegramUser.getExternalId(), "REGISTRATION"));
-				response.setText(
-						String.format(
-								"Добро пожаловать \"%s\":)",
-								telegramUser.getFirstname() + " " + telegramUser.getLastname()
-						)
-				);
-				break;
-			}
-
-			case "/register_confirm_final_no":
-			{
-				telegramUserService.delete(telegramUser);
-				response.setText("/start");
-				break;
-			}
-
-			default:
-				throw new UnsupportedOperationException("Not impl");
+			telegramUser.setConfirm(true);
+			telegramUserService.save(telegramUser);
+			telegramQuestionService.deleteAll(telegramQuestionService.getAllByExternalIdAndType(telegramUser.getExternalId(), "REGISTRATION"));
+			response.setText(
+					String.format(
+							"Добро пожаловать \"%s\":)",
+							telegramUser.getFirstname() + " " + telegramUser.getLastname()
+					)
+			);
+		}
+		else if (registrationCommand.getValue().equalsIgnoreCase("/register_confirm_final_no"))
+		{
+			telegramUserService.delete(telegramUser);
+			response.setText(registrationCommand.getMsg());
+		}
+		else
+		{
+			response.setText(registrationCommand.getMsg());
 		}
 
 		return response;
