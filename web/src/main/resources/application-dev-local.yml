@@ -24,8 +24,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: zaytsev.dmitry9228@gmail.com
-    password: Monstersatana666
+    username: user
+    password: pass
     properties:
       mail:
         smtp:
@@ -34,7 +34,7 @@ spring:
             enable: true
 
 telegram-bot:
-  token: 1240189105:AAFsnlOuiNHpm3kjG_evFRB5fv36CJJz1Dk
+  token: token
   username: my_home_system_bot
 
 
