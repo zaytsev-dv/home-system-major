@@ -3,16 +3,20 @@ package ru.home.system.major.api.notifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.home.system.major.core.annotations.ParamConstraint;
 import ru.home.system.major.core.dto.NotificationCreateDTO;
 import ru.home.system.major.core.dto.NotificationCreateDelayedDTO;
 import ru.home.system.major.core.service.NotificationService;
 import ru.home.system.major.core.service.util.TryCatchService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/notifications")
 @Slf4j
+@Validated
 public class NotificationsEndpoints
 {
 	private final NotificationService notificationService;
@@ -35,9 +39,20 @@ public class NotificationsEndpoints
 	}
 
 	//TODO: create only for test
-	@GetMapping("/test")
-	public String test()
+	@GetMapping("/test{id}")
+	public String test(@PathVariable
+					   @NotEmpty(message = "variable: \"id\" can not be empty")
+					   @NotNull(message = "variable: \"id\" can not be null") String id)
 	{
-		return TryCatchService.runReturned(() -> "String");
+		return TryCatchService.runReturned(() -> id);
+	}
+
+	@GetMapping("/test/2")
+	public String test2(
+			@Valid
+			@ParamConstraint(conditionType = "regex", message = "error")
+			@RequestParam String id)
+	{
+		return TryCatchService.runReturned(() -> id);
 	}
 }
