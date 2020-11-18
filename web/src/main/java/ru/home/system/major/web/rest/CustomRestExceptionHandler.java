@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.home.system.major.core.dto.ApiError;
+import ru.home.system.major.core.exceptions.CustomNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,9 +19,16 @@ import static ru.home.system.major.web.rest.RestExceptionHandlerUtil.buildApiErr
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler
 {
 	@ExceptionHandler({Exception.class})
-	public ResponseEntity<ApiError> notFoundExceptionHandler(HttpServletRequest req, Exception ex)
+	public ResponseEntity<ApiError> internalServer(HttpServletRequest req, Exception ex)
 	{
 		ApiError error = buildApiError(req, ex, HttpStatus.INTERNAL_SERVER_ERROR);
 		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler({CustomNotFoundException.class})
+	public ResponseEntity<ApiError> notFound(HttpServletRequest req, Exception ex)
+	{
+		ApiError error = buildApiError(req, ex, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 	}
 }

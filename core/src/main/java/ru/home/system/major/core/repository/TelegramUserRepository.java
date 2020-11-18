@@ -8,4 +8,5 @@ public interface TelegramUserRepository extends BaseSqlRepository<TelegramUser, 
 {
 	TelegramUser getByExternalId(Long externalId);
 	TelegramUser getByExternalIdOrId(Long externalId, Long id);
+	TelegramUser getByUsername(String username);
 }

@@ -51,4 +51,10 @@ public class TelegramUserServiceImpl extends BaseSqlServiceImpl<TelegramUser, Lo
 	{
 		return telegramUserRepository.getByExternalIdOrId(id, id);
 	}
+
+	@Override
+	public TelegramUser getByUsername(String username)
+	{
+		return telegramUserRepository.getByUsername(username);
+	}
 }
