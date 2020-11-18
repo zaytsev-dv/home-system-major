@@ -41,7 +41,6 @@ telegram-bot:
 server:
   port: 8090
 
-turbine:
-  aggregator:
-    cluster-config: SAMPLE_HOME_SYSTEM_MAJOR
-  app-config: SAMLE_HYSTRIX_AGGREGATE
+logstash:
+  host: localhost
+  port: 5000

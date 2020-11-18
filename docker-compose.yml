@@ -1,6 +1,65 @@
 version: '3.7'
 
 services:
+  elasticsearch:
+    image: elasticsearch:$ELK_VERSION
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTICSEARCH_USERNAME: "admin"
+      ELASTICSEARCH_PASSWORD: "admin123"
+      discovery.type: single-node
+      XPACK_SECURITY_ENABLED: "true"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    healthcheck:
+      test: "wget -q -O - http://admin:admin123@localhost:9200/_cat/health"
+      interval: 1s
+      timeout: 30s
+      retries: 300
+    networks:
+      - elk
+      - skynet
+    restart: unless-stopped
+
+  logstash:
+    image: logstash:$ELK_VERSION
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      XPACK_MONITORING_ELASTICSEARCH_USERNAME: "admin"
+      XPACK_MONITORING_ELASTICSEARCH_PASSWORD: "admin123"
+      XPACK_MONITORING_ELASTICSEARCH_HOSTS: "elasticsearch:9200"
+      XPACK_MONITORING_ENABLED: "true"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    networks:
+      - elk
+      - skynet
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: kibana:${ELK_VERSION}
+    environment:
+      ELASTICSEARCH_USERNAME: "admin"
+      ELASTICSEARCH_PASSWORD: "admin123"
+      XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED: "true"
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+      - skynet
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+      - logstash
+
   database:
     build: ./database/
     environment:
@@ -27,25 +86,30 @@ services:
       - skynet
 
   home_system_major:
-    restart: always
-#    image: zaytsevdv/home-system-major:dev-latest
     build: ./
+    restart: always
+    container_name: home_system_major
+#    image: zaytsevdv/home-system-major:dev-latest
     ports:
       - "8090:8090"
     networks:
       - skynet
     environment:
       spring.profiles.active: 'dev-local-docker'
-      spring.mail.username: 'user'
-      spring.mail.password: 'pass'
-      telegram-bot.token: 'token'
+      spring.mail.username: 'zaytsev.dmitry9228@gmail.com'
+      spring.mail.password: 'Monstersatana666'
+      telegram-bot.token: '1240189105:AAFsnlOuiNHpm3kjG_evFRB5fv36CJJz1Dk'
       telegram-bot.username: 'my_home_system_bot'
     links:
       - database
+      - logstash
     depends_on:
       - database
       - nginx
+      - logstash
 
 networks:
   skynet:
+    driver: bridge
+  elk:
     driver: bridge
