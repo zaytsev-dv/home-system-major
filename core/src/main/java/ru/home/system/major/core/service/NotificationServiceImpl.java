@@ -34,7 +34,7 @@ public class NotificationServiceImpl implements NotificationService
 	public void sendMsg(NotificationCreateDTO notificationCreateDTO)
 	{
 		log.debug("get notificationAdapter");
-		NotificationAdapter notificationAdapter = getNotificationAdapter(notificationCreateDTO);
+		NotificationAdapter notificationAdapter = getNotificationAdapter(notificationCreateDTO.getNotificationType());
 
 		log.debug("call notificationAdapter.sendNotification()");
 		notificationAdapter.sendNotification(
@@ -44,13 +44,6 @@ public class NotificationServiceImpl implements NotificationService
 		);
 	}
 
-	private NotificationAdapter getNotificationAdapter(NotificationCreateDTO notificationCreateDTO)
-	{
-		return adapters.stream()
-				.filter(adapter -> adapter.getNotificationType().equals(Adapter.getByName(notificationCreateDTO.getNotificationType())))
-				.findFirst().orElseThrow(() -> new AdapterNotFoundException(notificationCreateDTO.getNotificationType().toUpperCase()));
-	}
-
 	@Override
 	public void sendMsgDelayed(NotificationCreateDelayedDTO notificationCreateDTO)
 	{
@@ -58,7 +51,7 @@ public class NotificationServiceImpl implements NotificationService
 		LocalDateTime to = stringToDateTime(notificationCreateDTO.getDateTime(), YYYY_MM_DD_T_HH_MM);
 		LocalDateTime now = LocalDateTime.now();
 
-		NotificationAdapter notificationAdapter = getNotificationAdapter(notificationCreateDTO);
+		NotificationAdapter notificationAdapter = getNotificationAdapter(notificationCreateDTO.getNotificationType());
 		ScheduledFuture<?> countdown = scheduledExecutorService.schedule(new Runnable()
 		{
 			@Override
@@ -72,5 +65,13 @@ public class NotificationServiceImpl implements NotificationService
 				);
 			}
 		}, to.getSecond() - now.getSecond(), TimeUnit.SECONDS);
+	}
+
+	@Override
+	public NotificationAdapter getNotificationAdapter(String type)
+	{
+		return adapters.stream()
+				.filter(adapter -> adapter.getNotificationType().equals(Adapter.getByName(type)))
+				.findFirst().orElseThrow(() -> new AdapterNotFoundException(type.toUpperCase()));
 	}
 }
