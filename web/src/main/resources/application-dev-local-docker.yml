@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: home_system_major
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://database:5432/home_system_major
+    username: postgres
+    password: postgres
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.xml
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true # to avoid postgres lob creation error at start
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    show-sql: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: user
+    password: pass
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+telegram-bot:
+  token: token
+  username: my_home_system_bot
+
+
+server:
+  port: 8090
+
+turbine:
+  aggregator:
+    cluster-config: SAMPLE_HOME_SYSTEM_MAJOR
+  app-config: SAMLE_HYSTRIX_AGGREGATE

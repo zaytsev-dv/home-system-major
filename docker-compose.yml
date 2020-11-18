@@ -3,13 +3,14 @@ version: '3.7'
 services:
   database:
     build: ./database/
-    hostname: database_home_system_major
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: home_system_major
     ports:
-      - "6000:5432"
+      - "5432:5432"
+    networks:
+      - skynet
 #    volumes:
 #      - ./database/create_database_for_docker.sql:/docker-entrypoint-initdb.d/1.sql
 
@@ -27,14 +28,14 @@ services:
 
   home_system_major:
     restart: always
-    container_name: home_system_major
-    image: zaytsevdv/home-system-major:dev-latest
+#    image: zaytsevdv/home-system-major:dev-latest
+    build: ./
     ports:
       - "8090:8090"
     networks:
       - skynet
     environment:
-      spring.profiles.active: 'dev-local'
+      spring.profiles.active: 'dev-local-docker'
       spring.mail.username: 'user'
       spring.mail.password: 'pass'
       telegram-bot.token: 'token'
