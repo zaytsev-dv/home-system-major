@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtil
 {
+	public static final String YYYY_MM_DD_T_HH_MM = "yyyy-MM-dd'T'HH:mm";
+
 	private DateTimeUtil()
 	{
 	}

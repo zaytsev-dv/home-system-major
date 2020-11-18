@@ -16,6 +16,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static ru.home.system.major.core.service.util.DateTimeUtil.YYYY_MM_DD_T_HH_MM;
+import static ru.home.system.major.core.service.util.DateTimeUtil.stringToDateTime;
+
 @Service
 @Slf4j
 public class NotificationServiceImpl implements NotificationService
@@ -52,7 +55,8 @@ public class NotificationServiceImpl implements NotificationService
 	public void sendMsgDelayed(NotificationCreateDelayedDTO notificationCreateDTO)
 	{
 		ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-		LocalDateTime now = LocalDateTime.now().plusMinutes(1L);
+		LocalDateTime to = stringToDateTime(notificationCreateDTO.getDateTime(), YYYY_MM_DD_T_HH_MM);
+		LocalDateTime now = LocalDateTime.now();
 
 		NotificationAdapter notificationAdapter = getNotificationAdapter(notificationCreateDTO);
 		ScheduledFuture<?> countdown = scheduledExecutorService.schedule(new Runnable()
@@ -67,6 +71,6 @@ public class NotificationServiceImpl implements NotificationService
 						notificationCreateDTO.getRecipient()
 				);
 			}
-		}, now.getSecond(), TimeUnit.SECONDS);
+		}, to.getSecond() - now.getSecond(), TimeUnit.SECONDS);
 	}
 }
