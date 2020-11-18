@@ -21,6 +21,8 @@ jobs:
           java-version: 8
 
       - name: set ENV
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           if [ "$GITHUB_REF" == "refs/heads/master" ]; then
              echo "Create PRODUCTION image"
