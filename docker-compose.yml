@@ -96,9 +96,9 @@ services:
       - skynet
     environment:
       spring.profiles.active: 'dev-local-docker'
-      spring.mail.username: 'zaytsev.dmitry9228@gmail.com'
-      spring.mail.password: 'Monstersatana666'
-      telegram-bot.token: '1240189105:AAFsnlOuiNHpm3kjG_evFRB5fv36CJJz1Dk'
+      spring.mail.username: 'user'
+      spring.mail.password: 'pass'
+      telegram-bot.token: 'token'
       telegram-bot.username: 'my_home_system_bot'
     links:
       - database
