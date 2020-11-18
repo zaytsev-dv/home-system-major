@@ -66,11 +66,11 @@ public class TelegramBot extends TelegramLongPollingBot
 		TelegramQuestion lastQuestion = null;
 		if (update.getMessage() == null)
 		{
-			lastQuestion = telegramQuestionService.findTopByOrderByCreatedAtDesc(Long.valueOf(update.getCallbackQuery().getFrom().getId()));
+			lastQuestion = telegramQuestionService.findTopByExternalIdOrderByCreatedAtDesc(Long.valueOf(update.getCallbackQuery().getFrom().getId()));
 		}
 		else
 		{
-			lastQuestion = telegramQuestionService.findTopByOrderByCreatedAtDesc(Long.valueOf(update.getMessage().getFrom().getId()));
+			lastQuestion = telegramQuestionService.findTopByExternalIdOrderByCreatedAtDesc(Long.valueOf(update.getMessage().getFrom().getId()));
 		}
 		boolean isCommand = update.getMessage() != null && !CollectionUtils.isEmpty(update.getMessage().getEntities()) && update.getMessage().getText().startsWith("/");
 		boolean isAnswerOnKeyboardButton = update.getCallbackQuery() != null;

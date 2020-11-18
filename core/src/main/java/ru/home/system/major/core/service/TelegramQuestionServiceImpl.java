@@ -28,7 +28,7 @@ public class TelegramQuestionServiceImpl extends BaseSqlServiceImpl<TelegramQues
 
 
 	@Override
-	public TelegramQuestion findTopByOrderByCreatedAtDesc(Long userId)
+	public TelegramQuestion findTopByExternalIdOrderByCreatedAtDesc(Long userId)
 	{
 		return telegramQuestionRepository.findTopByExternalIdOrderByCreatedAtDesc(userId);
 	}

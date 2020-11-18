@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface TelegramQuestionService extends BaseService<TelegramQuestion, Long>
 {
-	TelegramQuestion findTopByOrderByCreatedAtDesc(Long userId);
+	TelegramQuestion findTopByExternalIdOrderByCreatedAtDesc(Long userId);
 	List<TelegramQuestion> getAllByExternalIdAndType(Long externalId, String type);
 }
