@@ -31,15 +31,21 @@ public class NotificationServiceImpl implements NotificationService
 	public void sendMsg(NotificationCreateDTO notificationCreateDTO)
 	{
 		log.debug("get notificationAdapter");
-		NotificationAdapter notificationAdapter = adapters.stream()
-				.filter(adapter -> adapter.getNotificationType().equals(Adapter.getByName(notificationCreateDTO.getNotificationType())))
-				.findFirst().orElseThrow(() -> new AdapterNotFoundException(notificationCreateDTO.getNotificationType().toUpperCase()));
+		NotificationAdapter notificationAdapter = getNotificationAdapter(notificationCreateDTO);
 
 		log.debug("call notificationAdapter.sendNotification()");
 		notificationAdapter.sendNotification(
 				notificationCreateDTO.getSubject(),
 				notificationCreateDTO.getMessage(),
-				notificationCreateDTO.getRecipient());
+				notificationCreateDTO.getRecipient()
+		);
+	}
+
+	private NotificationAdapter getNotificationAdapter(NotificationCreateDTO notificationCreateDTO)
+	{
+		return adapters.stream()
+				.filter(adapter -> adapter.getNotificationType().equals(Adapter.getByName(notificationCreateDTO.getNotificationType())))
+				.findFirst().orElseThrow(() -> new AdapterNotFoundException(notificationCreateDTO.getNotificationType().toUpperCase()));
 	}
 
 	@Override
@@ -47,12 +53,19 @@ public class NotificationServiceImpl implements NotificationService
 	{
 		ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 		LocalDateTime now = LocalDateTime.now().plusMinutes(1L);
+
+		NotificationAdapter notificationAdapter = getNotificationAdapter(notificationCreateDTO);
 		ScheduledFuture<?> countdown = scheduledExecutorService.schedule(new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				log.info("Out of time!");
+				log.info("Send msg");
+				notificationAdapter.sendNotification(
+						notificationCreateDTO.getSubject(),
+						notificationCreateDTO.getMessage(),
+						notificationCreateDTO.getRecipient()
+				);
 			}
 		}, now.getSecond(), TimeUnit.SECONDS);
 	}
