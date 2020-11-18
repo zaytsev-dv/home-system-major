@@ -1,12 +1,11 @@
 package ru.home.system.major.api.notifications;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.home.system.major.core.service.NotificationService;
+import org.springframework.web.bind.annotation.*;
 import ru.home.system.major.core.dto.NotificationCreateDTO;
+import ru.home.system.major.core.dto.NotificationCreateDelayedDTO;
+import ru.home.system.major.core.service.NotificationService;
+import ru.home.system.major.core.service.util.TryCatchService;
 
 @RestController
 @RequestMapping("/notifications")
@@ -23,6 +22,19 @@ public class NotificationsEndpoints
 	@PostMapping
 	public void send(@RequestBody NotificationCreateDTO notificationCreateDTO)
 	{
-		notificationService.sendMsg(notificationCreateDTO);
+		TryCatchService.runVoid(() -> notificationService.sendMsg(notificationCreateDTO));
+	}
+
+	@PostMapping("/delay")
+	public void sendDelayed(@RequestBody NotificationCreateDelayedDTO notificationCreateDTO)
+	{
+		TryCatchService.runVoid(() -> notificationService.sendMsgDelayed(notificationCreateDTO));
+	}
+
+	//TODO: create only for test
+	@GetMapping("/test")
+	public String test()
+	{
+		return TryCatchService.runReturned(() -> "String");
 	}
 }

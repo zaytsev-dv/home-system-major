@@ -18,7 +18,7 @@ import static ru.home.system.major.web.rest.RestExceptionHandlerUtil.buildApiErr
 @ControllerAdvice
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler
 {
-	@ExceptionHandler({Exception.class})
+	@ExceptionHandler({RuntimeException.class})
 	public ResponseEntity<ApiError> internalServer(HttpServletRequest req, Exception ex)
 	{
 		ApiError error = buildApiError(req, ex, HttpStatus.INTERNAL_SERVER_ERROR);
