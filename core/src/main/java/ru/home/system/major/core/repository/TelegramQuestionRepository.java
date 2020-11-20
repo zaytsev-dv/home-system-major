@@ -1,8 +1,8 @@
 package ru.home.system.major.core.repository;
 
 
+import ru.home.system.artifactory.repository.base.BaseSqlRepository;
 import ru.home.system.major.core.domain.TelegramQuestion;
-import ru.home.system.major.core.repository.base.BaseSqlRepository;
 
 import java.util.List;
 

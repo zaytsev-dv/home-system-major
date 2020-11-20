@@ -2,7 +2,7 @@ package ru.home.system.major.core.service;
 
 
 import ru.home.system.major.core.domain.TelegramQuestion;
-import ru.home.system.major.core.service.base.BaseService;
+import ru.home.system.artifactory.service.base.BaseService;
 
 import java.util.List;
 

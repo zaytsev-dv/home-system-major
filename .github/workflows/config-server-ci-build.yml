@@ -18,5 +18,5 @@ jobs:
         with:
           java-version: 8
       - name: Clean install MAVEN
-        run: mvn -B clean install
+        run: mvn -B clean install -Dartifactory.user=${{ secrets.ARTIFACTORY_USER }} -Dartifactory.password=${{ secrets.ARTIFACTORY_PASSWORD }} -Dbuildnumber=1 -s settings.xml
 

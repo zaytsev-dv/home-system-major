@@ -4,7 +4,7 @@ package ru.home.system.major.core.service.notes;
 import ru.home.system.major.core.domain.Notes;
 import ru.home.system.major.core.domain.TelegramUser;
 import ru.home.system.major.core.dto.NotesCreate;
-import ru.home.system.major.core.service.base.BaseService;
+import ru.home.system.artifactory.service.base.BaseService;
 
 import java.util.List;
 

@@ -7,9 +7,9 @@ import ru.home.system.major.core.domain.TelegramUser;
 import ru.home.system.major.core.dto.NotesCreate;
 import ru.home.system.major.core.exceptions.TelegramUserNotFoundException;
 import ru.home.system.major.core.repository.NotesRepository;
-import ru.home.system.major.core.repository.base.BaseSqlRepository;
+import ru.home.system.artifactory.repository.base.BaseSqlRepository;
 import ru.home.system.major.core.service.TelegramUserService;
-import ru.home.system.major.core.service.base.BaseSqlServiceImpl;
+import ru.home.system.artifactory.service.base.BaseSqlServiceImpl;
 
 import java.util.List;
 import java.util.Optional;

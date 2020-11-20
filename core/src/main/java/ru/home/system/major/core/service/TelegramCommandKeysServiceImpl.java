@@ -5,8 +5,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.home.system.major.core.domain.TelegramCommandKeys;
 import ru.home.system.major.core.repository.TelegramCommandKeysRepository;
-import ru.home.system.major.core.repository.base.BaseSqlRepository;
-import ru.home.system.major.core.service.base.BaseSqlServiceImpl;
+import ru.home.system.artifactory.repository.base.BaseSqlRepository;
+import ru.home.system.artifactory.service.base.BaseSqlServiceImpl;
 
 import java.util.Map;
 import java.util.stream.Collectors;
