@@ -1,8 +1,11 @@
 FROM maven:3.6-jdk-8-alpine AS builder
 
+ARG ARTIFACTORY_USER
+ARG ARTIFACTORY_PASSWORD
+
 WORKDIR /src
 COPY . .
-RUN mvn clean install
+RUN mvn -B clean install -Dartifactory.user=${ARTIFACTORY_USER} -Dartifactory.password=${ARTIFACTORY_PASSWORD} -Dbuildnumber=1 -s settings.xml
 
 FROM java:8-jre-alpine
 COPY --from=builder /src/web/target/home-system-major.jar /home-system-major.jar
