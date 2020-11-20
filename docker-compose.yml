@@ -88,17 +88,17 @@ services:
   home_system_major:
     build: ./
     restart: always
-    container_name: home_system_major
+    container_name: $COMPOSE_PROJECT_NAME
 #    image: zaytsevdv/home-system-major:dev-latest
     ports:
       - "8090:8090"
     networks:
       - skynet
     environment:
-      spring.profiles.active: 'dev-local-docker'
-      spring.mail.username: 'user'
-      spring.mail.password: 'pass'
-      telegram-bot.token: 'token'
+      spring.profiles.active: $SPRING_PROFILE_ACTIVE
+      spring.mail.username: $SMTP_USER
+      spring.mail.password: $SMTP_PASSWORD
+      telegram-bot.token: $TELEGRAM_BOT_TOKEN
       telegram-bot.username: 'my_home_system_bot'
     links:
       - database
