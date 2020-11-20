@@ -3,10 +3,10 @@ package ru.home.system.major.core.adapters.telegram;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.home.system.artifactory.exceptions.CustomNotFoundException;
 import ru.home.system.major.core.adapters.base.Adapter;
 import ru.home.system.major.core.adapters.base.NotificationAdapter;
 import ru.home.system.major.core.domain.TelegramUser;
-import ru.home.system.major.core.exceptions.CustomNotFoundException;
 import ru.home.system.major.core.service.TelegramUserService;
 
 import java.util.Optional;
