@@ -16,8 +16,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static ru.home.system.major.core.service.util.DateTimeUtil.YYYY_MM_DD_T_HH_MM;
-import static ru.home.system.major.core.service.util.DateTimeUtil.stringToDateTime;
+import static ru.home.system.artifactory.service.util.DateTimeUtil.YYYY_MM_DD_T_HH_MM;
+import static ru.home.system.artifactory.service.util.DateTimeUtil.stringToDateTime;
+
 
 @Service
 @Slf4j

@@ -3,8 +3,8 @@ package ru.home.system.major.core.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import ru.home.system.major.core.annotations.DateTimeFormat;
-import ru.home.system.major.core.annotations.NullAndEmptySafe;
+import ru.home.system.artifactory.annotations.DateTimeFormat;
+import ru.home.system.artifactory.annotations.NullAndEmptySafe;
 
 @AllArgsConstructor
 @NoArgsConstructor

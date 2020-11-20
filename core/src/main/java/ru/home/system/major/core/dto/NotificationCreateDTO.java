@@ -3,7 +3,7 @@ package ru.home.system.major.core.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.home.system.major.core.annotations.NullAndEmptySafe;
+import ru.home.system.artifactory.annotations.NullAndEmptySafe;
 
 @Data
 @AllArgsConstructor

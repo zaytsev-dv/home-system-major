@@ -3,7 +3,7 @@ package ru.home.system.major.api.notifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.home.system.major.core.annotations.ParamConstraint;
+import ru.home.system.artifactory.annotations.ParamConstraint;
 import ru.home.system.major.core.dto.NotificationCreateDTO;
 import ru.home.system.major.core.dto.NotificationCreateDelayedDTO;
 import ru.home.system.major.core.service.NotificationService;
