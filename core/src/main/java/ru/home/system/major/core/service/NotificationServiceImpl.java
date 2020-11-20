@@ -9,15 +9,14 @@ import ru.home.system.major.core.dto.NotificationCreateDTO;
 import ru.home.system.major.core.dto.NotificationCreateDelayedDTO;
 import ru.home.system.major.core.exceptions.AdapterNotFoundException;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static ru.home.system.artifactory.service.util.DateTimeUtil.YYYY_MM_DD_T_HH_MM;
-import static ru.home.system.artifactory.service.util.DateTimeUtil.stringToDateTime;
+import static ru.home.system.artifactory.service.util.DateTimeUtil.strToDate;
 
 
 @Service
@@ -48,12 +47,13 @@ public class NotificationServiceImpl implements NotificationService
 	@Override
 	public void sendMsgDelayed(NotificationCreateDelayedDTO notificationCreateDTO)
 	{
-		ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-		LocalDateTime to = stringToDateTime(notificationCreateDTO.getDateTime(), YYYY_MM_DD_T_HH_MM);
-		LocalDateTime now = LocalDateTime.now();
+		Date desiredDate = strToDate(notificationCreateDTO.getDateTime(), YYYY_MM_DD_T_HH_MM);
+		Date now = new Date();
+		long delay = desiredDate.getTime() - now.getTime();
 
 		NotificationAdapter notificationAdapter = getNotificationAdapter(notificationCreateDTO.getNotificationType());
-		ScheduledFuture<?> countdown = scheduledExecutorService.schedule(new Runnable()
+		ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
+		ses.schedule(new Runnable()
 		{
 			@Override
 			public void run()
@@ -65,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService
 						notificationCreateDTO.getRecipient()
 				);
 			}
-		}, to.getSecond() - now.getSecond(), TimeUnit.SECONDS);
+		}, delay, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
