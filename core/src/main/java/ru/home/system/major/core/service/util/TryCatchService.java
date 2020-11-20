@@ -1,7 +1,7 @@
 package ru.home.system.major.core.service.util;
 
 import lombok.extern.slf4j.Slf4j;
-import ru.home.system.major.core.exceptions.CustomNotFoundException;
+import ru.home.system.artifactory.exceptions.CustomNotFoundException;
 
 import java.util.function.Supplier;
 
