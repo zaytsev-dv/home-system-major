@@ -16,6 +16,7 @@
 * Liquibase
 * ELK
 * Telegram bot library (https://github.com/rubenlagus/TelegramBots/tree/master/telegrambots-spring-boot-starter)
+* Jaeger
 * Nginx
 * Docker
 * Github actions
