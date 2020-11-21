@@ -17,15 +17,20 @@
 * ELK
 * Telegram bot library (https://github.com/rubenlagus/TelegramBots/tree/master/telegrambots-spring-boot-starter)
 * Nginx
+* Docker
+* Github actions
 
 
 
 ## How to start
 1. Edit file /.env (```SMTP_USER, SMTP_PASSWORD, TELEGRAM_BOT_TOKEN```)
  
+2. If you want build from docker hub image uncomment: ``zaytsevdv/home-system-major:dev-latest`` (needed image see on docker hub) 
 2. ```docker-compose up (-d)```
 
-3. Telegram bot you will find at: [t.me/my_home_system_bot](t.me/my_home_system_bot) 
+3. Telegram bot you will find at: [t.me/my_home_system_bot](t.me/my_home_system_bot)
+
+4. Docker images available at https://hub.docker.com/repository/docker/zaytsevdv/home-system-major 
 
 swagger documentation will be available at the link: ``localhost/api``
 
