@@ -14,8 +14,14 @@
 * Telegram bot library (https://github.com/rubenlagus/TelegramBots/tree/master/telegrambots-spring-boot-starter)
 * Nginx
 
+
+
 ## How to start
-```docker-compose up (-d)```
+1. Edit file /.env (```SMTP_USER, SMTP_PASSWORD, TELEGRAM_BOT_TOKEN```)
+ 
+2. ```docker-compose up (-d)```
+
+3. Telegram bot you will find at: [t.me/my_home_system_bot](t.me/my_home_system_bot) 
 
 swagger documentation will be available at the link: ``localhost/api``
 
