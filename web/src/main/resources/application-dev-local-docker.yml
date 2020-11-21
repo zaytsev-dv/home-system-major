@@ -44,3 +44,12 @@ server:
 logstash:
   host: localhost
   port: 5000
+
+opentracing:
+  jaeger:
+    udp-sender:
+      host: localhost
+      port: 16686
+    service-name: HOME_SYSTEM_MAJOR_APP
+    http-sender:
+      url: http://localhost:14268/api/traces
