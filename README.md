@@ -8,8 +8,12 @@
 * Java 8
 * Spring
 * Lombok
+* Jpa
 * Hibernate
+* Hibernate validator
+* Jfrog
 * Postgres
+* Liquibase
 * ELK
 * Telegram bot library (https://github.com/rubenlagus/TelegramBots/tree/master/telegrambots-spring-boot-starter)
 * Nginx
