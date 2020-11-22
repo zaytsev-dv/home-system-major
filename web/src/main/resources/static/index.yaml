@@ -96,6 +96,13 @@ paths:
                 items:
                   $ref: "#/components/schemas/Notes"
 
+        '404':
+          description: "Note category with name: {%s} not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+
 components:
   schemas:
     StringResponse:
@@ -149,4 +156,18 @@ components:
         description:
           type: "string"
         category:
+          type: "string"
+
+    NotFound:
+      type: "object"
+      properties:
+        status:
+          type: "string"
+        code:
+          type: "number"
+        message:
+          type: "string"
+        path:
+          type: "string"
+        methodType:
           type: "string"
