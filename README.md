@@ -1,7 +1,7 @@
 # This project was conceived solely for educational purposes and fun :) 
 
 ## Architecture:
-![image](https://github.com/zaytsev-dv/home-system-major/blob/dev/web/src/main/resources/home-system-diagram.jpg)
+![image](https://github.com/zaytsev-dv/home-system-major/blob/dev/web/src/main/resources/home-system-diagram_v_1.jpg)
 
 
 ## Stack:
