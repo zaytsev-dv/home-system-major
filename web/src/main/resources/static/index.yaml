@@ -32,6 +32,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StringResponse"
+
+  /notifications/delay:
+    post:
+      tags:
+        - "Notifications"
+      description: "Отложенная отправка письма"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotificationCreateDelayed"
+
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StringResponse"
   /notes:
     post:
       tags:
@@ -50,6 +70,27 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StringResponse"
+
+  /notes/{userId}:
+    get:
+      tags:
+        - "Notes"
+      description: "Получение записок"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notes"
 
 components:
   schemas:
@@ -71,6 +112,21 @@ components:
         recipient:
           type: "string"
 
+    NotificationCreateDelayed:
+      type: "object"
+      properties:
+        notificationType:
+          type: "string"
+        subject:
+          type: "string"
+        message:
+          type: "string"
+        recipient:
+          type: "string"
+        dateTime:
+          type: "string"
+          format: "yyyy-MM-dd'T'HH:mm"
+
     NotesCreate:
       type: "object"
       properties:
@@ -80,3 +136,11 @@ components:
           type: "string"
         telegramUserId:
           type: "number"
+
+    Notes:
+      type: "object"
+      properties:
+        value:
+          type: "string"
+        description:
+          type: "string"

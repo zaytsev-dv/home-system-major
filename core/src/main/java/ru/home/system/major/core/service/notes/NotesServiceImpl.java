@@ -2,17 +2,19 @@ package ru.home.system.major.core.service.notes;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.home.system.artifactory.repository.base.BaseSqlRepository;
+import ru.home.system.artifactory.service.base.BaseSqlServiceImpl;
 import ru.home.system.major.core.domain.Notes;
 import ru.home.system.major.core.domain.TelegramUser;
 import ru.home.system.major.core.dto.NotesCreate;
+import ru.home.system.major.core.dto.NotesDto;
 import ru.home.system.major.core.exceptions.TelegramUserNotFoundException;
 import ru.home.system.major.core.repository.NotesRepository;
-import ru.home.system.artifactory.repository.base.BaseSqlRepository;
 import ru.home.system.major.core.service.TelegramUserService;
-import ru.home.system.artifactory.service.base.BaseSqlServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -56,5 +58,13 @@ public class NotesServiceImpl extends BaseSqlServiceImpl<Notes, Long> implements
 	public List<Notes> getAllByTelegramUser(Long externalId)
 	{
 		return notesRepository.getAllByTelegramUser(telegramUserService.getByExternalId(externalId));
+	}
+
+	@Override
+	public List<NotesDto> getAllByTelegramUserDTOS(String userId)
+	{
+		return this.getAllByTelegramUser(Long.parseLong(userId)).stream()
+				.map(orm -> new NotesDto(orm.getValue(), orm.getDescription()))
+				.collect(Collectors.toList());
 	}
 }
