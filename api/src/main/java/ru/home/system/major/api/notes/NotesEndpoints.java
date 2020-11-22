@@ -28,11 +28,11 @@ public class NotesEndpoints
 		notesService.create(body);
 	}
 
-	@GetMapping("/{userId}")
-	public List<NotesDto> getWithFilter(@PathVariable String userId)
+	@GetMapping
+	public List<NotesDto> getWithFilter(@RequestParam String userId, @RequestParam(required = false) String category)
 	{
 		return TryCatchService.runReturnedTraced(
-				() -> notesService.getAllByTelegramUserDTOS(userId),
+				() -> notesService.getAllByTelegramUserDTOS(userId, category),
 				"getWithFilter",
 				new HashMap<String, String>()
 				{

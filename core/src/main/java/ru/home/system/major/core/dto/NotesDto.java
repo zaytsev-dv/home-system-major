@@ -11,4 +11,5 @@ public class NotesDto
 {
 	private String value;
 	private String description;
+	private String category;
 }

@@ -71,15 +71,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/StringResponse"
 
-  /notes/{userId}:
     get:
       tags:
         - "Notes"
       description: "Получение записок"
       parameters:
         - name: "userId"
-          in: "path"
+          in: "query"
           required: true
+          schema:
+            type: string
+        - name: "category"
+          in: "query"
+          required: false
           schema:
             type: string
       responses:
@@ -143,4 +147,6 @@ components:
         value:
           type: "string"
         description:
+          type: "string"
+        category:
           type: "string"

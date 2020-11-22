@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.home.system.artifactory.repository.base.BaseSqlRepository;
 import ru.home.system.artifactory.service.base.BaseSqlServiceImpl;
 import ru.home.system.major.core.domain.Notes;
+import ru.home.system.major.core.domain.NotesCategory;
 import ru.home.system.major.core.domain.TelegramUser;
 import ru.home.system.major.core.dto.NotesCreate;
 import ru.home.system.major.core.dto.NotesDto;
@@ -21,11 +22,17 @@ import java.util.stream.Collectors;
 public class NotesServiceImpl extends BaseSqlServiceImpl<Notes, Long> implements NotesService
 {
 	private final NotesRepository notesRepository;
+	private final NotesCategoryService notesCategoryService;
 	private final TelegramUserService telegramUserService;
 
-	public NotesServiceImpl(NotesRepository notesRepository, TelegramUserService telegramUserService)
+	public NotesServiceImpl(
+			NotesRepository notesRepository,
+			NotesCategoryService notesCategoryService,
+			TelegramUserService telegramUserService
+	)
 	{
 		this.notesRepository = notesRepository;
+		this.notesCategoryService = notesCategoryService;
 		this.telegramUserService = telegramUserService;
 	}
 
@@ -61,10 +68,11 @@ public class NotesServiceImpl extends BaseSqlServiceImpl<Notes, Long> implements
 	}
 
 	@Override
-	public List<NotesDto> getAllByTelegramUserDTOS(String userId)
+	public List<NotesDto> getAllByTelegramUserDTOS(String userId, String category)
 	{
+		NotesCategory categoryOrm = notesCategoryService.getByValueIgnoreCase(category);
 		return this.getAllByTelegramUser(Long.parseLong(userId)).stream()
-				.map(orm -> new NotesDto(orm.getValue(), orm.getDescription()))
+				.map(orm -> new NotesDto(orm.getValue(), orm.getDescription(), categoryOrm.getValue()))
 				.collect(Collectors.toList());
 	}
 }

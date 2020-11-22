@@ -14,5 +14,5 @@ public interface NotesService extends BaseService<Notes, Long>
 	void create(NotesCreate body);
 	List<Notes> getAllByTelegramUser(TelegramUser telegramUser);
 	List<Notes> getAllByTelegramUser(Long externalId);
-	List<NotesDto> getAllByTelegramUserDTOS(String userId);
+	List<NotesDto> getAllByTelegramUserDTOS(String userId, String category);
 }

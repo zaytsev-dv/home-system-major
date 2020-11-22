@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "notes")
+@Table(name = "notes_category")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Notes
+public class NotesCategory
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +24,4 @@ public class Notes
 
 	@Column(name = "description", columnDefinition = "text")
 	private String description;
-
-	@ManyToOne
-	@JoinColumn(name = "notes_category_id", columnDefinition = "text")
-	private NotesCategory category;
-
-	@ManyToOne
-	@JoinColumn(name = "telegram_user_id", columnDefinition = "fk")
-	private TelegramUser telegramUser;
 }
