@@ -39,6 +39,24 @@ public class TryCatchService
 		{
 			throw e;
 		}
+		catch (Throwable ex)
+		{
+			log.error(ex.getMessage(), ex);
+			throw new RuntimeException("Internal server error");
+		}
+
+	}
+
+	public static <T> T runReturned(Supplier<T> supplier)
+	{
+		try
+		{
+			return supplier.get();
+		}
+		catch (CustomNotFoundException e)
+		{
+			throw e;
+		}
 		catch (Exception ex)
 		{
 			log.error(ex.getMessage(), ex);
@@ -63,7 +81,7 @@ public class TryCatchService
 		{
 			throw e;
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			span.log(e.getMessage());
 			log.error(e.getMessage(), e);
@@ -73,23 +91,5 @@ public class TryCatchService
 		{
 			span.finish();
 		}
-	}
-
-	public static <T> T runReturned(Supplier<T> supplier)
-	{
-		try
-		{
-			return supplier.get();
-		}
-		catch (CustomNotFoundException e)
-		{
-			throw e;
-		}
-		catch (Exception ex)
-		{
-			log.error(ex.getMessage(), ex);
-			throw new RuntimeException("Internal server error");
-		}
-
 	}
 }

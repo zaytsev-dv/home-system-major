@@ -36,12 +36,6 @@ public class JaegerService
 			runnable.run();
 		}
 
-		catch (Exception e)
-		{
-			span.log(e.getMessage());
-			log.error(e.getMessage(), e);
-			throw new RuntimeException("Internal server error");
-		}
 		finally
 		{
 			span.finish();
