@@ -7,23 +7,26 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.home.system.major.core.dto.TelegramButtonCallbackData;
 import ru.home.system.major.core.service.notes.NotesService;
+import ru.home.system.major.core.service.realm.RealmService;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.home.system.major.core.adapters.telegram.KeyboardCreator.getKeyboard;
-import static ru.home.system.major.core.adapters.telegram.TelegramAdapterCommand.ALL_NOTES;
-import static ru.home.system.major.core.adapters.telegram.TelegramAdapterCommand.START;
+import static ru.home.system.major.core.adapters.telegram.TelegramAdapterCommand.*;
 
 @Component
 @Slf4j
 public class TelegramCommandHandler
 {
 	private final NotesService notesService;
+	private final RealmService realmService;
 
-	public TelegramCommandHandler(NotesService notesService)
+	public TelegramCommandHandler(NotesService notesService, RealmService realmService)
 	{
 		this.notesService = notesService;
+		this.realmService = realmService;
 	}
 
 	SendMessage handle(Update update)
@@ -51,6 +54,16 @@ public class TelegramCommandHandler
 				response.setText(
 						!StringUtils.hasText(notes) ? "Нет сохраненных записок!" : notes
 				);
+				break;
+			}
+
+			case PRODUCT_SEARCH:
+			{
+				List<TelegramButtonCallbackData> buttons = realmService.findAll().stream()
+						.map(realm -> new TelegramButtonCallbackData(realm.getValue(), "/" + realm.getValue()))
+						.collect(Collectors.toList());
+				response.setText("Выбери интересующую тебя категорию");
+				response.setReplyMarkup(getKeyboard(buttons));
 				break;
 			}
 

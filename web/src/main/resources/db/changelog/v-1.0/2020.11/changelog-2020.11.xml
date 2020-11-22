@@ -12,5 +12,8 @@
     <include file="db/changelog/v-1.0/2020.11/15.11.2020__16:00_notes_table.sql"/>
     <include file="db/changelog/v-1.0/2020.11/16.11.2020__02:00_create_command_keys_table.sql"/>
     <include file="db/changelog/v-1.0/2020.11/22.11.2020__16:00_create_notes_category_table.sql"/>
+    <include file="db/changelog/v-1.0/2020.11/23.11.2020__01:00_create_new_together_us_table.sql"/>
+    <include file="db/changelog/v-1.0/2020.11/23.11.2020__01:10_create_keyboard_callback_table.sql"/>
+    <include file="db/changelog/v-1.0/2020.11/23.11.2020__01:20_rename_keyboard_callback_table.sql"/>
 
 </databaseChangeLog>
