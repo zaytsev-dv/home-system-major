@@ -53,3 +53,9 @@ opentracing:
     service-name: HOME_SYSTEM_MAJOR_APP
     http-sender:
       url: http://localhost:14268/api/traces
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
