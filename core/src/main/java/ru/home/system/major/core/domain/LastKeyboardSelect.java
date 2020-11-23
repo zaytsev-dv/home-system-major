@@ -9,19 +9,16 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "telegram_question")
+@Table(name = "last_keyboard_select")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TelegramQuestion
+public class LastKeyboardSelect
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Column(name = "external_id", columnDefinition = "bigint")
-	private Long externalId;
 
 	@Column(name = "value", columnDefinition = "text")
 	private String value;
@@ -29,16 +26,9 @@ public class TelegramQuestion
 	@Column(name = "type", columnDefinition = "text")
 	private String type;
 
-	@Column(name = "sub_type", columnDefinition = "text")
-	private String subType;
+	@Column(name = "external_id", columnDefinition = "bigint")
+	private Long externalId;
 
 	@Column(name = "created_at", columnDefinition = "timestamp with timezone")
 	private LocalDateTime createdAt;
-
-	@Column(name = "is_answered", columnDefinition = "bool")
-	private boolean isAnswered;
-
-	@ManyToOne
-	@JoinColumn(name = "last_keyboard_select_id", columnDefinition = "fk")
-	private LastKeyboardSelect lastKeyboardSelect;
 }

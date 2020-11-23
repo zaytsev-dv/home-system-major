@@ -7,6 +7,9 @@ import ru.home.system.artifactory.service.base.BaseSqlServiceImpl;
 import ru.home.system.major.core.domain.Product;
 import ru.home.system.major.core.repository.ProductRepository;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @Service
 @Slf4j
 public class ProductServiceImpl extends BaseSqlServiceImpl<Product, Long> implements ProductService
@@ -22,5 +25,11 @@ public class ProductServiceImpl extends BaseSqlServiceImpl<Product, Long> implem
 	protected BaseSqlRepository<Product, Long> getRepository()
 	{
 		return productRepository;
+	}
+
+	@Override
+	public List<Product> getAllByRealmAndPrice(String realm, BigDecimal price)
+	{
+		return productRepository.getAllByRealmAndPrice(realm.replace("/", "").toUpperCase(), price);
 	}
 }

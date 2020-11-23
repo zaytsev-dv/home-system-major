@@ -15,5 +15,7 @@
     <include file="db/changelog/v-1.0/2020.11/23.11.2020__01:00_create_new_together_us_table.sql"/>
     <include file="db/changelog/v-1.0/2020.11/23.11.2020__01:10_create_keyboard_callback_table.sql"/>
     <include file="db/changelog/v-1.0/2020.11/23.11.2020__01:20_rename_keyboard_callback_table.sql"/>
+    <include file="db/changelog/v-1.0/2020.11/23.11.2020__01:40_update_telegram_question_table.sql"/>
+    <include file="db/changelog/v-1.0/2020.11/23.11.2020__02:00_update_product_table.sql"/>
 
 </databaseChangeLog>

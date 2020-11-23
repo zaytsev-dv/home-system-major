@@ -6,15 +6,20 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import ru.home.system.major.core.domain.Product;
 import ru.home.system.major.core.domain.TelegramQuestion;
 import ru.home.system.major.core.domain.TelegramUser;
 import ru.home.system.major.core.service.TelegramQuestionService;
 import ru.home.system.major.core.service.TelegramUserService;
+import ru.home.system.major.core.service.lastKeyboardSelect.LastKeyboardSelectService;
+import ru.home.system.major.core.service.product.ProductService;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -25,16 +30,27 @@ public class TelegramRealmKeyboardHandler implements TelegramKeyboardHandler, Te
 
 	private final TelegramQuestionService telegramQuestionService;
 	private final TelegramUserService telegramUserService;
+	private final ProductService productService;
+	private final LastKeyboardSelectService lastKeyboardSelectService;
 
-	public TelegramRealmKeyboardHandler(TelegramQuestionService telegramQuestionService, TelegramUserService telegramUserService)
+	public TelegramRealmKeyboardHandler(
+			TelegramQuestionService telegramQuestionService,
+			TelegramUserService telegramUserService,
+			ProductService productService,
+			LastKeyboardSelectService lastKeyboardSelectService
+	)
 	{
 		this.telegramQuestionService = telegramQuestionService;
 		this.telegramUserService = telegramUserService;
+		this.productService = productService;
+		this.lastKeyboardSelectService = lastKeyboardSelectService;
 	}
 
 	@Override
 	public SendMessage handle(Update update)
 	{
+		lastKeyboardSelectService.create(update, this.getType());
+
 		SendMessage response = new SendMessage();
 		response.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
 		response.setText("Какой товар тебя интересует?");
@@ -64,7 +80,17 @@ public class TelegramRealmKeyboardHandler implements TelegramKeyboardHandler, Te
 
 			case "PRICE":
 			{
-				response.setText("Я нашел следующие товары: ");
+				List<Product> allProducts = productService.getAllByRealmAndPrice(
+						lastQuestion.getLastKeyboardSelect().getValue(),
+						BigDecimal.valueOf(Long.parseLong(update.getMessage().getText())
+						)
+				);
+				response.setText(
+						"Я нашел следующие товары: " +
+								allProducts.stream()
+										.map(orm -> orm.getValue() + " " + orm.getPrice())
+										.collect(Collectors.joining("\n"))
+				);
 				break;
 			}
 
@@ -122,6 +148,7 @@ public class TelegramRealmKeyboardHandler implements TelegramKeyboardHandler, Te
 					.type(type)
 					.subType(subType)
 					.createdAt(LocalDateTime.now())
+					.lastKeyboardSelect(lastKeyboardSelectService.findTopByExternalIdOrderByCreatedAtDesc(message.getChat().getId()))
 					.build();
 			telegramQuestionService.save(question);
 		}

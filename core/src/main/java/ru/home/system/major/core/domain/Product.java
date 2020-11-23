@@ -32,4 +32,8 @@ public class Product
 	@ManyToOne
 	@JoinColumn(name = "company_id", columnDefinition = "fk")
 	private Company company;
+
+	@ManyToOne
+	@JoinColumn(name = "realm_id", columnDefinition = "fk")
+	private Realm realm;
 }
