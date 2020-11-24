@@ -69,7 +69,8 @@ public class TryCatchService
 	{
 		Span span = getTracer().buildSpan(methodName).start();
 
-		if (!CollectionUtils.isEmpty(params)) {
+		if (!CollectionUtils.isEmpty(params))
+		{
 			params.forEach(span::setTag);
 		}
 
